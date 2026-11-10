@@ -1,7 +1,7 @@
 # Миграция из clickhouse-import-rosstat
 
 Дата: 2026-11-10. Источник: `kmlebedev/clickhouse-import-rosstat@8b179cbc3dfd4d2b3faa92dd0bcc08da11dd2eb0`.
-История извлечена `git filter-repo`; полная карта путей — `manifest.tsv`.
+История извлечена `git filter-repo` по текущим путям (`scripts/models/**`, `scripts/lib/**`, `scripts/ml_*`, `docs/superpowers/{specs,plans}/**`, `docs/research/**`); полная карта путей — `manifest.tsv`. Более ранняя история файлов до переноса в пакеты (`scripts/<model>_*.py`) остаётся в истории main и доступна по старым путям.
 
 ## Что переехало
 
