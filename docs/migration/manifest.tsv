@@ -266,6 +266,7 @@ docs/superpowers/specs/2026-11-01-cb-comp-backend-compare-design.md	docs/specs/2
 docs/superpowers/specs/2026-11-01-cb-comp-p03-tlive-target-design.md	docs/specs/2026-11-01-cb-comp-p03-tlive-target-design.md	docs	
 docs/superpowers/specs/2026-11-01-cb-comp-p05-mlflow-design.md	docs/specs/2026-11-01-cb-comp-p05-mlflow-design.md	docs	
 docs/superpowers/specs/2026-11-01-cpi-h2o-automl-design.md	docs/specs/2026-11-01-cpi-h2o-automl-design.md	docs	
+scripts/README.md	models/ppi_sa/README.md	models	
 scripts/models/README.md	models/README.md	models	
 scripts/models/__init__.py	models/__init__.py	models	
 scripts/models/cb_comp/README.md	models/cb_comp/README.md	models	
@@ -416,20 +417,19 @@ scripts/models/ppi/README.md	models/ppi/README.md	models
 scripts/models/ppi/__init__.py	models/ppi/__init__.py	models	
 scripts/models/ppi/ppi_monthly_forecast.py	models/ppi/ppi_monthly_forecast.py	models	
 scripts/models/ppi/ppi_monthly_forecast_test.py	models/ppi/ppi_monthly_forecast_test.py	models	
-scripts/ppi_sa_README.md	models/ppi_sa/README.md	models	
-scripts/ppi_sa_ppi_sa_industry.py	models/ppi_sa/ppi_sa_industry.py	models	
-scripts/ppi_sa_ppi_sa_industry_test.py	models/ppi_sa/ppi_sa_industry_test.py	models	
-scripts/ppi_sa_ppi_sa_mapping.py	models/ppi_sa/ppi_sa_mapping.py	models	
-scripts/ppi_sa_ppi_sa_mapping_test.py	models/ppi_sa/ppi_sa_mapping_test.py	models	
-scripts/ppi_sa_ppi_sa_parity.py	models/ppi_sa/ppi_sa_parity.py	models	
-scripts/ppi_sa_ppi_sa_parity_test.py	models/ppi_sa/ppi_sa_parity_test.py	models	
-scripts/ppi_sa_ppi_sa_probe.py	models/ppi_sa/ppi_sa_probe.py	models	
-scripts/ppi_sa_ppi_sa_probe_test.py	models/ppi_sa/ppi_sa_probe_test.py	models	
-scripts/ppi_sa_ppi_sa_text_anchors.py	models/ppi_sa/ppi_sa_text_anchors.py	models	
-scripts/ppi_sa_ppi_sa_text_anchors_test.py	models/ppi_sa/ppi_sa_text_anchors_test.py	models	
-scripts/ppi_sa_ppi_sa_weights_panel.py	models/ppi_sa/ppi_sa_weights_panel.py	models	
-scripts/ppi_sa_ppi_sa_weights_panel_test.py	models/ppi_sa/ppi_sa_weights_panel_test.py	models	
-scripts/ppi_sa_ppi_sa_x13.R	models/ppi_sa/ppi_sa_x13.R	models	
+scripts/ppi_sa_industry.py	models/ppi_sa/ppi_sa_industry.py	models	
+scripts/ppi_sa_industry_test.py	models/ppi_sa/ppi_sa_industry_test.py	models	
+scripts/ppi_sa_mapping.py	models/ppi_sa/ppi_sa_mapping.py	models	
+scripts/ppi_sa_mapping_test.py	models/ppi_sa/ppi_sa_mapping_test.py	models	
+scripts/ppi_sa_parity.py	models/ppi_sa/ppi_sa_parity.py	models	
+scripts/ppi_sa_parity_test.py	models/ppi_sa/ppi_sa_parity_test.py	models	
+scripts/ppi_sa_probe.py	models/ppi_sa/ppi_sa_probe.py	models	
+scripts/ppi_sa_probe_test.py	models/ppi_sa/ppi_sa_probe_test.py	models	
+scripts/ppi_sa_text_anchors.py	models/ppi_sa/ppi_sa_text_anchors.py	models	
+scripts/ppi_sa_text_anchors_test.py	models/ppi_sa/ppi_sa_text_anchors_test.py	models	
+scripts/ppi_sa_weights_panel.py	models/ppi_sa/ppi_sa_weights_panel.py	models	
+scripts/ppi_sa_weights_panel_test.py	models/ppi_sa/ppi_sa_weights_panel_test.py	models	
+scripts/ppi_sa_x13.R	models/ppi_sa/ppi_sa_x13.R	models	
 weeklysa/data/weekly_cpi_sa_x13.R	models/cpi/weekly_cpi_sa_x13.R	models	копия R-скрипта production SA
 	.env.example	project	новый файл
 	.github/workflows/ci.yml	project	новый файл
