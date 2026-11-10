@@ -8,6 +8,7 @@
 import csv
 import io
 import os
+import shutil
 import sys
 import tempfile
 import unittest
@@ -15,11 +16,17 @@ import unittest.mock
 import urllib.request
 from pathlib import Path
 
-# Тест лежит в `models/polyus/`, запуск прямой, поэтому каталог
-# `scripts` добавляется в sys.path до импорта пакета.
+# Тест лежит в `models/polyus/`, запуск прямой, поэтому корень
+# репозитория добавляется в sys.path до импорта пакета.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from models.polyus import aisc as ex
+
+if shutil.which("pdftotext") is None:
+    raise unittest.SkipTest(
+        "pdftotext не установлен (poppler) — Polyus PDF-тесты пропущены; "
+        "установите poppler-utils"
+    )
 
 
 class TestConfig(unittest.TestCase):
