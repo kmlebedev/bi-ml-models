@@ -2,7 +2,7 @@
 """h1: недельный агрегат без ЖКУ и с сезонностью поверх `combo3` — Task 4b #446.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-10-31-cb-comp-h1-weekly-ex-utilities-design.md`.
+спека `docs/specs/2026-10-31-cb-comp-h1-weekly-ex-utilities-design.md`.
 
 * **`ЖКУ_wk`** — недельный индекс группы 9470 из 6 рядов (вода, водоотведение,
   отопление, сжиженный газ, электроэнергия); покрытие 83,1 % веса 9470;
@@ -36,9 +36,9 @@ from pathlib import Path
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_h1_weekly as tw
@@ -547,7 +547,7 @@ def run(archive: Path, panel_csv: Path, public_dir: Path, base_predictions: Path
     )
     no_eval = tw.evaluate(gate_models, t_live, [m for m in months if m != date(2022, 3, 1)], None)
     result = {
-        "spec": "docs/superpowers/specs/2026-10-31-cb-comp-h1-weekly-ex-utilities-design.md",
+        "spec": "docs/specs/2026-10-31-cb-comp-h1-weekly-ex-utilities-design.md",
         "git_sha": lb.git_sha(),
         "version": version,
         "train_start": all_train[0].isoformat(),

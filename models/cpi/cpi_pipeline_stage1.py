@@ -2,7 +2,7 @@
 """Stage 1 конвейера CPI → SA/ожидания → ставка: nowcast `M0`/`M0+1`.
 
 Пункт `key-rate/phase-4-cpi-key-rate-pipeline`, спека
-`docs/superpowers/specs/2026-10-20-cpi-key-rate-pipeline-design.md` §4, §6.1.
+`docs/specs/2026-10-20-cpi-key-rate-pipeline-design.md` §4, §6.1.
 
 Идея: на дату заседания ЦБ `d` по календарю публикаций найти последний
 вышедший месячный ИПЦ, следующий неопубликованный месяц `M0` и предсказать
@@ -19,7 +19,7 @@ As-of: каждое заседание считается моментом 13:30
 
 Скрипт только читает ClickHouse; в БД не пишет. Запуск — `make
 cpi-pipeline-stage1` (env подключает Makefile), тесты —
-`scripts/models/cpi/cpi_pipeline_stage1_test.py`.
+`models/cpi/cpi_pipeline_stage1_test.py`.
 """
 
 from __future__ import annotations
@@ -44,12 +44,12 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
-from lib import eval_utils as eu  # noqa: E402
-from lib import ml_experiment as mlx  # noqa: E402
-from lib.publication_calendar import PublicationCalendar  # noqa: E402
+from bi_ml import eval_utils as eu  # noqa: E402
+from bi_ml import experiment as mlx  # noqa: E402
+from bi_ml.publication_calendar import PublicationCalendar  # noqa: E402
 from models.cpi import cpi_monthly as cm  # noqa: E402
 from models.cpi import cpi_monthly_v3 as cmv3  # noqa: E402
 
@@ -63,7 +63,7 @@ MEETING_TIME = time(13, 30)
 
 # Календарь публикаций: экспериментальная фикстура Task 0. Production-путь —
 # витрина `publication_calendar` (отдельный Go/DDL-пункт).
-CALENDAR_PATH = ROOT / "scripts" / "testdata" / "publication_calendar.csv"
+CALENDAR_PATH = ROOT / "testdata" / "publication_calendar.csv"
 
 # Порядок признаков — контракт с матрицами моделей и отчётом. Ни одного
 # признака ожиданий/SA/МП здесь нет: они reserved for stage 2.
@@ -883,7 +883,7 @@ def write_report(path: Path, payload: dict) -> None:
     """Markdown-отчёт прогона; числа не редактируются руками."""
     lines = ["# Stage 1 CPI nowcast `M0`/`M0+1` — отчёт прогона", ""]
     lines.append(
-        "> `scripts/models/cpi/cpi_pipeline_stage1.py`; пункт "
+        "> `models/cpi/cpi_pipeline_stage1.py`; пункт "
         "`key-rate/phase-4-cpi-key-rate-pipeline`. Только чтение ClickHouse."
     )
     lines.append("")
@@ -1042,7 +1042,7 @@ def _log_experiment(
                 for row in rows
             ],
             spec_path=(
-                "docs/superpowers/specs/"
+                "docs/specs/"
                 "2026-10-20-cpi-key-rate-pipeline-design.md"
             ),
             enabled=True,

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Выбор варианта коррекции КУ во входе Stage 1 на dev-окне (#401 W2).
 
-Протокол — спека `docs/superpowers/specs/2026-10-29-cpi-two-stage-weekly-sa-design.md`
+Протокол — спека `docs/specs/2026-10-29-cpi-two-stage-weekly-sa-design.md`
 §4 W2 («Протокол W2», до результатов): фиксированная `ElasticNetCV` (B3) на
 признаках `sa4w_last`, `sa4w_partial`, `y_lag1`, `tariff_expected`; цель — `T_SAX(O)`
 из винтажной истории тестового origin'а; истина — окончательный `T_SAX`; train —
@@ -25,8 +25,8 @@ from typing import Optional
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 FIRST_TRAIN = date(2016, 1, 1)

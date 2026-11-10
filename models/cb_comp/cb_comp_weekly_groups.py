@@ -2,7 +2,7 @@
 """Недельный ИПЦ → 88 групп CB_COMP: маппинг и as-of признаки — Task 4 #424.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-10-31-cb-comp-h1-weekly-design.md` §3–§4.
+спека `docs/specs/2026-10-31-cb-comp-h1-weekly-design.md` §3–§4.
 
 * **маппинг** — 148 недельных позиций (`v_rosstat_macro`, `source='rosstat'`,
   `frequency='W'`) сопоставляются с листовыми весами 2024 тем же extended-
@@ -13,7 +13,7 @@
 * **агрегат** — обёртка над `cpi_weekly_aggregate.wkagg_features`.
 
 Только чтение ClickHouse и локального архива CB_COMP; в БД не пишет.
-Тесты — `scripts/models/cb_comp/cb_comp_weekly_groups_test.py`.
+Тесты — `models/cb_comp/cb_comp_weekly_groups_test.py`.
 """
 
 import math
@@ -25,9 +25,9 @@ from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_groups_panel as gp

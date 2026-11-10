@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Таргеты, доступность и фолды two-stage CPI (#401 W3).
 
-Спека `docs/superpowers/specs/2026-10-29-cpi-two-stage-weekly-sa-design.md` §3 и §5.
+Спека `docs/specs/2026-10-29-cpi-two-stage-weekly-sa-design.md` §3 и §5.
 
 Строка с месяцем `O` — месяц `M0` (cm-конвенция строк `cpi_monthly`; в сетке #396 это origin `O−1`):
 признаки на cutoff `P_{O−1}` (конвенция `publication`), таргет — накопленный рост `O … O+h−1`
@@ -20,8 +20,8 @@ from datetime import date
 from pathlib import Path
 from typing import Callable, NamedTuple, Optional
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import cpi_sa_reconciliation as rec

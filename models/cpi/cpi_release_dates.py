@@ -3,7 +3,7 @@
 
 #401 W0. Источник — график срочных информаций Росстата
 (https://rosstat.gov.ru/compendium/document/50798, «Об индексе потребительских
-цен в <месяц> <год> года»); таблица — `scripts/testdata/rosstat_cpi_release_dates.csv`
+цен в <месяц> <год> года»); таблица — `testdata/rosstat_cpi_release_dates.csv`
 (период, дата размещения, источник: имя файла релиза `N_DD-MM-YYYY.html`
 на rosstat.gov.ru, где дата проверяется по имени, либо `wayback:…` — таблица
 графика срочных информаций из архивных снимков страницы; время суток не
@@ -17,8 +17,8 @@ import sys
 from datetime import date
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-DEFAULT_PATH = ROOT / "scripts" / "testdata" / "rosstat_cpi_release_dates.csv"
+ROOT = Path(__file__).resolve().parents[2]
+DEFAULT_PATH = ROOT / "testdata" / "rosstat_cpi_release_dates.csv"
 RULE_DAY = 9  # `publication_calendar`/`cpi_monthly.PUBLICATION_DAY`
 _FILE_DATE = re.compile(r"_(\d{2})-(\d{2})-(\d{4})\.")
 WAYBACK_PREFIX = "wayback:"  # дата из таблицы графика (архивные снимки страницы), без файла релиза

@@ -2,7 +2,7 @@
 """CPI monthly v3: публичные недельные признаки в месячном nowcast ИПЦ.
 
 Stage 1 пункта `key-rate/phase-4-ml-components` (issue #76), спека
-`docs/superpowers/specs/2026-10-19-cpi-components-public-data-design.md`.
+`docs/specs/2026-10-19-cpi-components-public-data-design.md`.
 
 Идея: h1-разрыв с CB_COMP после #221 остаётся 5,5 %, а недельные индексы
 Росстата месяца M доступны до релиза месячного ИПЦ (10–16-е M+1). Скрипт
@@ -19,7 +19,7 @@ v2-baseline, B1–B3 и B3_weekly на walk-forward.
 `wk_share_rising`, `wk_median`, `wk_median4`, `wk_gasoline4`.
 
 Скрипт только читает ClickHouse; в БД не пишет. Запуск — `make cpi-monthly-v3`
-(env подключает Makefile), тесты — `scripts/models/cpi/cpi_monthly_v3_test.py`.
+(env подключает Makefile), тесты — `models/cpi/cpi_monthly_v3_test.py`.
 """
 
 import argparse
@@ -36,13 +36,13 @@ import numpy as np
 from catboost import CatBoostRegressor
 from sklearn.linear_model import ElasticNetCV
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 from models.cpi import cpi_monthly as cm
-from lib import eval_utils as eu
-from lib import ml_experiment as mlx
-from lib.clickhouse import ch_query
+from bi_ml import eval_utils as eu
+from bi_ml import experiment as mlx
+from bi_ml.clickhouse import ch_query
 
 WEEKLY_SQL = """
 SELECT series, date, value
@@ -418,7 +418,7 @@ def evaluate(rows: list, start: int, embargo: int, models: dict = None) -> tuple
 def write_report(path: Path, payload: dict) -> None:
     lines = ["# CPI monthly v3: публичные недельные признаки — отчёт прогона", ""]
     lines.append(
-        "> `scripts/models/cpi/cpi_monthly_v3.py`; пункт `key-rate/phase-4-ml-components` "
+        "> `models/cpi/cpi_monthly_v3.py`; пункт `key-rate/phase-4-ml-components` "
         "(issue #76), Stage 1. Числа не редактируются руками."
     )
     lines.append("")
@@ -548,7 +548,7 @@ def run(
                     for row in rows
                 ],
                 spec_path=(
-                    "docs/superpowers/specs/"
+                    "docs/specs/"
                     "2026-10-19-cpi-components-public-data-design.md"
                 ),
                 enabled=True,

@@ -2,7 +2,7 @@
 """Live-панель 88 групп CB_COMP из ЕМИСС 31074 (`v_fedstat_ipc`) — Task 1 #421.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Спека
-`docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md` §3–§7.
+`docs/specs/2026-10-30-cb-comp-88-groups-live-design.md` §3–§7.
 
 * **Q1 маппинг** — 88 групп `model.xlsx` → ряды 31074: `direct` (готовый ряд
   группы с тем же названием; цепочка — основной ряд и ручные псевдонимы
@@ -53,8 +53,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_parity as cp
@@ -623,7 +623,7 @@ def load_products(start: date = PANEL_START) -> tuple:
     На одну пару (ряд, месяц) ожидается один регион (до 2023 — РФ, с 2023 — РФ
     без новых субъектов); дубль — ошибка, а не молчаливый выбор.
     """
-    from lib.clickhouse import ch_query
+    from bi_ml.clickhouse import ch_query
 
     rows = ch_query(
         "SELECT series, region, toString(date) AS d, value FROM v_fedstat_ipc "
@@ -846,10 +846,10 @@ def run(archive: Path, out_dir: Path, runner_factory, asof: bool, jobs: int,
     first_covered = sum(first_weights.get(c, 0.0) for c in codes if first_sa_month in sa_full.get(c, {}))
     first_total = sum(first_weights.get(c, 0.0) for c in codes)
     result = {
-        "spec": "docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md",
-        "version_spec": ("docs/superpowers/specs/2026-10-31-cb-comp-tlive-2009-86-groups-design.md"
+        "spec": "docs/specs/2026-10-30-cb-comp-88-groups-live-design.md",
+        "version_spec": ("docs/specs/2026-10-31-cb-comp-tlive-2009-86-groups-design.md"
                          if version == "2009" else
-                         "docs/superpowers/specs/2026-10-31-cb-comp-tlive-2009-design.md"),
+                         "docs/specs/2026-10-31-cb-comp-tlive-2009-design.md"),
         "version": version,
         "fit_window": fit_window,
         "fit_span": [fit_first.isoformat(), fit_last.isoformat()],

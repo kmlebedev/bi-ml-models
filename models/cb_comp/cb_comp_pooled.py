@@ -2,7 +2,7 @@
 """Pooled CatBoost на 88 группах, окно 2016+ — Task 10 #438.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-10-31-cb-comp-pooled-88-groups-design.md`.
+спека `docs/specs/2026-10-31-cb-comp-pooled-88-groups-design.md`.
 
 * **строки** — `(группа, целевой месяц)`; цель — накопленный SA-прирост
   группы за h месяцев (`cb_comp_bottomup.component_targets`), признаки —
@@ -34,9 +34,9 @@ import numpy as np
 import pandas as pd
 from catboost import CatBoostRegressor
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_h1_bs_combo as h1
@@ -657,7 +657,7 @@ def run(archive: Path, panel_csv: Path, public_dir: Path, out_dir: Path, iterati
         "g10_alpha": G10_ALPHA,
     }
     result = {
-        "spec": "docs/superpowers/specs/2026-10-31-cb-comp-pooled-88-groups-design.md",
+        "spec": "docs/specs/2026-10-31-cb-comp-pooled-88-groups-design.md",
         "git_sha": lb.git_sha(),
         "config": config,
         "config_hash": hashlib.sha256(json.dumps(lb._jsonable(config), sort_keys=True).encode()).hexdigest(),

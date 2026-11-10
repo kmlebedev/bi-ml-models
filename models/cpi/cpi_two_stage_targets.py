@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """`T_SAX` и варианты коррекции КУ во входе Stage 1 (#401 W2).
 
-Спека `docs/superpowers/specs/2026-10-29-cpi-two-stage-weekly-sa-design.md` §4 W2
+Спека `docs/specs/2026-10-29-cpi-two-stage-weekly-sa-design.md` §4 W2
 (протокол W2 — до результатов).
 
 * `T_SAX` — SA ИПЦ без КУ: `(π − w·u)/(1 − w)` на м/м, затем X-13 (R `seasonal`) на
@@ -21,8 +21,8 @@ from datetime import date, timedelta
 from pathlib import Path
 from typing import Callable, Optional
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import cpi_sa_reconciliation as rec

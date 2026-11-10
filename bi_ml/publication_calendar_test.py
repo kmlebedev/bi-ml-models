@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
-"""Офлайн-тесты календаря публикаций `scripts/lib/publication_calendar.py`.
+"""Офлайн-тесты календаря публикаций `bi_ml/publication_calendar.py`.
 
 Запуск из корня репозитория (pytest не нужен):
 
     make publication-calendar-test
 
 ClickHouse и сеть не нужны: точные даты берутся из фикстуры
-`scripts/testdata/publication_calendar.csv`, остальное проверяется правилами
+`testdata/publication_calendar.csv`, остальное проверяется правилами
 fallback. Все времена — наивные, московское время.
 """
 
@@ -16,14 +16,14 @@ import unittest
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[2]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
 
-from lib.publication_calendar import CalendarPoint, PublicationCalendar
+from bi_ml.publication_calendar import CalendarPoint, PublicationCalendar
 
 
 CAL = PublicationCalendar.from_csv(
-    ROOT / "scripts" / "testdata" / "publication_calendar.csv"
+    ROOT / "testdata" / "publication_calendar.csv"
 )
 
 

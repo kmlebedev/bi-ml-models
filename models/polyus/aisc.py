@@ -32,10 +32,10 @@ from datetime import date
 from pathlib import Path
 from typing import Optional
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
-from lib.clickhouse import (
+from bi_ml.clickhouse import (
     ClickHouseError,
     HTTPError,
     ch_config,
@@ -160,7 +160,7 @@ ESCALATION = {
 ESCALATION_2025_TO_2034 = 1.06**3 * 1.04**6
 
 # PDF-фикстуры пресс-релизов 4Q/FY 2018–2021 и артефакты вывода.
-FIXTURE_DIR = ROOT / "scripts/testdata"
+FIXTURE_DIR = ROOT / "testdata"
 OUTPUT_SQL = ROOT / "sql/dcf_mine_plans_seed.sql"
 OUTPUT_CSV = ROOT / "polyus_lom_reconciled_long.csv"
 
@@ -1191,7 +1191,7 @@ def build_plan_rows(
 
     CAPEX_SUSTAINING = 0 ПО КОНТРАКТУ — ДВОЙНОГО СЧЁТА БЫТЬ НЕ ДОЛЖНО.
     Полюс определяет AISC прямо, дословно (пресс-релиз 4Q/FY2021,
-    `scripts/testdata/polyus_pr_4q_fy2021.pdf`): «AISC is defined by the group
+    `testdata/polyus_pr_4q_fy2021.pdf`): «AISC is defined by the group
     as TCC plus selling, general and administrative expenses, stripping activity
     asset additions, **sustaining capital expenditures**, unwinding of discounts
     on decommissioning liabilities…». То есть затраты поддержания УЖЕ ВНУТРИ
@@ -1555,7 +1555,7 @@ SQL_HEADER_TEMPLATE = """\
 --
 -- СГЕНЕРИРОВАН АВТОМАТИЧЕСКИ, ПРАВИТЬ РУКАМИ НЕЛЬЗЯ: правка будет затёрта
 -- следующим прогоном. Источник чисел — калибровка по пресс-релизам Полюса
--- и факт добычи из databook_polyus; всё это делает scripts/models/polyus/aisc.py.
+-- и факт добычи из databook_polyus; всё это делает models/polyus/aisc.py.
 --
 -- Команда генерации: {command}
 -- Дата генерации: {generated}

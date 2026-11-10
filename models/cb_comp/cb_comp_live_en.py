@@ -2,7 +2,7 @@
 """EN_COMP и CB+EN на нашей панели 88 групп, истина `TARGET_FULL` — Task 3 #423.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md` §15.
+спека `docs/specs/2026-10-30-cb-comp-88-groups-live-design.md` §15.
 
 * **данные, окна, цели групп, признаки** — как в Task 2 (`cb_comp_live_bottomup`):
   SA групп из `panel.csv`, МП по листам публичной книги, макро v2;
@@ -35,9 +35,9 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_live_bottomup as lb
@@ -259,7 +259,7 @@ def run(archive: Path, panel_csv: Path, public_dir: Path, out_dir: Path) -> dict
     aggregated = {m: lb.aggregate_predictions(groups[m], data["weights"], data["test_months"]) for m in CANDIDATES}
     result = evaluate(aggregated, data)
     result.update({
-        "spec": "docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md §15",
+        "spec": "docs/specs/2026-10-30-cb-comp-88-groups-live-design.md §15",
         "git_sha": lb.git_sha(),
         "inputs": {"panel_csv": lb.sha256(panel_csv), "public_panel_csv": lb.sha256(public_dir / "public_panel.csv"),
                    "sheet_map_csv": lb.sha256(public_dir / "sheet_map.csv"), "target_xlsx": lb.sha256(archive / cp.TARGET_XLSX)},

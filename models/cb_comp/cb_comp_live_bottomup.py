@@ -2,7 +2,7 @@
 """Live bottom-up по 88 группам на нашей панели, цель `T_LIVE` — Task 2 #422.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md` §12–§13 (вход — §13.1).
+спека `docs/specs/2026-10-30-cb-comp-88-groups-live-design.md` §12–§13 (вход — §13.1).
 
 * **данные** — SA групп из Task 1 (`build/cb-comp-groups/panel.csv`, C0 на окне `live`:
   `sa_full_mm` и `sa_asof_mm`), публичная книга МП по листам
@@ -33,9 +33,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_mlog as mlog
@@ -388,7 +388,7 @@ def run(archive: Path, panel_csv: Path, public_dir: Path, out_dir: Path, skip_r0
               "test": [str(test_months[0]), str(test_months[-1]), len(test_months)], "normal": len(normal),
               "models": list(models), "skip_asof": skip_asof, "g2_thresholds": {h: g2_threshold(h) for h in HORIZONS}}
     result = {
-        "spec": "docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md §13",
+        "spec": "docs/specs/2026-10-30-cb-comp-88-groups-live-design.md §13",
         "git_sha": git_sha(),
         "config": config,
         "config_hash": hashlib.sha256(json.dumps(config, sort_keys=True).encode()).hexdigest(),
@@ -417,7 +417,7 @@ def mlog_kwargs(aggregated: dict, truth_full: dict, live: dict, normal: list, te
     return {
         "run_name": f"live_cb__h1-h6__normal54__target_full__{version}",
         "config": {**config, "version": version, "truth": mlog.TRUTH, "unit": mlog.UNIT,
-                   "spec_path": "docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md §13",
+                   "spec_path": "docs/specs/2026-10-30-cb-comp-88-groups-live-design.md §13",
                    "inputs": inputs},
         "data_asof": cp.TEST_END,
         "sample_meta": {"rows": len(normal) * len(HORIZONS), "normal": len(normal),
@@ -428,7 +428,7 @@ def mlog_kwargs(aggregated: dict, truth_full: dict, live: dict, normal: list, te
              "t_live": float(live[h][m]) if m in live[h] else None}
             for h in HORIZONS for m in normal
         ],
-        "spec_path": "docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md §13",
+        "spec_path": "docs/specs/2026-10-30-cb-comp-88-groups-live-design.md §13",
         "aggregated": aggregated,
         "truth": truth_full,
         "months": normal,

@@ -2,7 +2,7 @@
 """h1: комбинация `live_cb` с BS_ECON16/BS_ROZN16 статьи, истина `TARGET_FULL` — Task 9 #436.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-10-31-cb-comp-h1-bs-combo-design.md`.
+спека `docs/specs/2026-10-31-cb-comp-h1-bs-combo-design.md`.
 
 * **`live_cb`** — Task 3 без изменений (`cb_comp_live_bottomup.fit_predict`);
 * **BS_ECON16 / BS_ROZN16** — OLS статьи Кошкина–Крылова (2025):
@@ -29,9 +29,9 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_live_bottomup as lb
@@ -317,7 +317,7 @@ def run(archive: Path, panel_csv: Path, public_dir: Path, out_dir: Path, version
     result.update({
         "checks": checks,
         "version": version,
-        "spec": "docs/superpowers/specs/2026-10-31-cb-comp-h1-bs-combo-design.md",
+        "spec": "docs/specs/2026-10-31-cb-comp-h1-bs-combo-design.md",
         "git_sha": lb.git_sha(),
         "inputs": {"panel_csv": lb.sha256(panel_csv), "public_panel_csv": lb.sha256(public_dir / "public_panel.csv"),
                    "sheet_map_csv": lb.sha256(public_dir / "sheet_map.csv"), "target_xlsx": lb.sha256(archive / cp.TARGET_XLSX),

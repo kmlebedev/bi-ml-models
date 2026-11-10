@@ -2,7 +2,7 @@
 """`core_nnls` и модели v4c/v4d для T_CORE (#396 Task 3, H3).
 
 Пункт `key-rate/phase-4-cpi-v4-weekly-aggregate-core`, роль ML. Спека
-`docs/superpowers/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md`
+`docs/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md`
 §5 и поправка §5.2 (корзины, as-of правило, состав моделей).
 
 * 29 товарных групп панели #364 (после предрегистрированных исключений
@@ -38,8 +38,8 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from models.cpi import cpi_monthly as cm

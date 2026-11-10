@@ -17,11 +17,11 @@ import unittest
 from datetime import date, datetime
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from lib.publication_calendar import PublicationCalendar
+from bi_ml.publication_calendar import PublicationCalendar
 from models.cpi import cpi_monthly as cm
 from models.cpi import cpi_weekly_aggregate as agg
 import cpi_monthly_test as cmt

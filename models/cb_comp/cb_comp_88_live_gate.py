@@ -2,7 +2,7 @@
 """Итоговый gate линии 88 групп и paper shadow 2024-08+ — Task 7 (#427).
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md` §18.
+спека `docs/specs/2026-10-30-cb-comp-88-groups-live-design.md` §18.
 
 * **gate** — воспроизводит `combo3@frozen` кодом Task 9 (`cb_comp_h1_bs_combo.run`),
   проверяет пины (отношения к CB_COMP и RMSE CB_COMP), строит таблицу классов
@@ -29,9 +29,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_h1_bs_combo as combo
@@ -88,7 +88,7 @@ PUBLIC_DIR = ROOT / "build" / "cb-comp-parity"
 OUT_DIR = ROOT / "build" / "cb-comp-88-live-gate"
 GATE_DIR = ROOT / "build" / "ml-gate"
 GATE_NAME = "cb_comp_88_live"
-SPEC = "docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md §18"
+SPEC = "docs/specs/2026-10-30-cb-comp-88-groups-live-design.md §18"
 
 
 # ---------------------------------------------------------------------------

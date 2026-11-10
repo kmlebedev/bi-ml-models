@@ -2,7 +2,7 @@
 """Task 5 #425: режим переобучения `live_cb` — frozen / annual / rolling и гипотеза W5b.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md` §17
+спека `docs/specs/2026-10-30-cb-comp-88-groups-live-design.md` §17
 (записан до кода и результатов). Решение владельца Q1 = A: база — `live_cb`,
 `combo3` — справочная строка.
 
@@ -36,9 +36,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_h1_bs_combo as h1
@@ -725,7 +725,7 @@ def run(archive: Path, panel_csv: Path, public_dir: Path, out_dir: Path, jobs: i
     predictions_path = out_dir / "predictions.csv"
     write_predictions(predictions_path, aggregated, combos, data, test_months)
     result = {
-        "spec": "docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md §17",
+        "spec": "docs/specs/2026-10-30-cb-comp-88-groups-live-design.md §17",
         "git_sha": git_sha(),
         "config": config,
         "config_hash": hashlib.sha256(json.dumps(_jsonable(config), sort_keys=True).encode()).hexdigest(),
@@ -761,7 +761,7 @@ def run_wf_only(archive: Path, panel_csv: Path, public_dir: Path, out_dir: Path,
     write_predictions(out_dir / "wf_predictions.csv", aggregated, {}, data, test_months)
     config = {"only": "wf", "seed": bu.SEED, "horizons": list(horizons), "jobs": jobs}
     result = {
-        "spec": "docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md §17",
+        "spec": "docs/specs/2026-10-30-cb-comp-88-groups-live-design.md §17",
         "git_sha": git_sha(), "config": config,
         "config_hash": hashlib.sha256(json.dumps(_jsonable(config), sort_keys=True).encode()).hexdigest(),
         "modes": per_mode,

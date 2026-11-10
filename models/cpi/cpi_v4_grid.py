@@ -2,7 +2,7 @@
 """Сетка 3 таргета × h1/h3/h6: оценка моделей (эксперимент 1, #396 Task 5).
 
 Пункт `key-rate/phase-4-cpi-v4-weekly-aggregate-core`, роль ML. Спека
-`docs/superpowers/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md`
+`docs/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md`
 §4–§6 и поправка §5.1 (состав моделей), план Task 5.
 
 Движок общий для всех ячеек: строки origin `O` (признаки на `cutoff_for(O)`)
@@ -31,18 +31,18 @@ from pathlib import Path
 import numpy as np
 from catboost import CatBoostRegressor
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from lib import eval_utils as eu
-from lib import ml_experiment as mlx
+from bi_ml import eval_utils as eu
+from bi_ml import experiment as mlx
 from models.cpi import cpi_monthly as cm
 from models.cpi import cpi_monthly_v3 as v3
 from models.cpi import cpi_weekly_aggregate as agg
 import cpi_v4_leaderboard as lb
 
-SPEC_PATH = "docs/superpowers/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md"
+SPEC_PATH = "docs/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md"
 SEED = lb.SEED
 MIN_COMMON_FOLDS = 12
 QUICK_ORIGINS = 18

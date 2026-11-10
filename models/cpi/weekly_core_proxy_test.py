@@ -29,7 +29,7 @@ from weekly_core_proxy import (
     regular_grid,
 )
 
-from lib import eval_utils as eu
+from bi_ml import eval_utils as eu
 
 
 class FourWeekAverageTest(unittest.TestCase):

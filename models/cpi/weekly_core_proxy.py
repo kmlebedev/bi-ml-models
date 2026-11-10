@@ -13,7 +13,7 @@
 `docs/research/2026-10-22-weekly-core-proxy.md`.
 
 Методы и критерий предрегистрированы в
-`docs/superpowers/specs/2026-10-22-weekly-core-proxy-design.md` §3:
+`docs/specs/2026-10-22-weekly-core-proxy-design.md` §3:
 baseline — дословно формула панели 36; CAL — расширяющаяся OLS недельного
 лог-прироста на календарные регрессоры; STL — period=52 на 7-дневной сетке
 лог-уровня; X-13 — `seats_log_cal` через `Rscript` + `seasonal` (Gate 0:
@@ -41,11 +41,11 @@ import numpy as np
 import statsmodels
 from statsmodels.tsa.seasonal import STL
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
-from lib import eval_utils as eu
-from lib.clickhouse import ch_query
+from bi_ml import eval_utils as eu
+from bi_ml.clickhouse import ch_query
 
 WEEKLY_AGGREGATE = "Индекс потребительских цен (недельная оценка)"
 CORE_SERIES = "Базовый ИПЦ"
@@ -432,7 +432,7 @@ def load_monthly(sql: str, as_index: bool) -> dict:
 def x13_probe() -> dict:
     env = dict(os.environ)
     env["R_LIBS_USER"] = str(ROOT / "build" / "weekly-core-proxy" / "r-lib")
-    script = ROOT / "scripts" / "models" / "cpi" / "weekly_core_proxy_x13.R"
+    script = ROOT / "models" / "cpi" / "weekly_core_proxy_x13.R"
     try:
         completed = subprocess.run(
             ["Rscript", str(script), "--probe"],
@@ -454,7 +454,7 @@ def x13_run(grid: list, keys: list, probe: dict) -> tuple:
         return [], probe
     env = dict(os.environ)
     env["R_LIBS_USER"] = str(ROOT / "build" / "weekly-core-proxy" / "r-lib")
-    script = ROOT / "scripts" / "models" / "cpi" / "weekly_core_proxy_x13.R"
+    script = ROOT / "models" / "cpi" / "weekly_core_proxy_x13.R"
     with tempfile.TemporaryDirectory() as directory:
         grid_path = Path(directory) / "grid.csv"
         cutoffs_path = Path(directory) / "cutoffs.txt"
@@ -490,7 +490,7 @@ def x13_run(grid: list, keys: list, probe: dict) -> tuple:
 
 
 def _x13_monthly_script() -> Path:
-    return ROOT / "scripts" / "models" / "cpi" / "weekly_core_proxy_x13_monthly.R"
+    return ROOT / "models" / "cpi" / "weekly_core_proxy_x13_monthly.R"
 
 
 def _x13_env() -> dict:

@@ -10,7 +10,7 @@ from unittest import mock
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from lib import ml_experiment as mlx
+from bi_ml import experiment as mlx
 from models.cb_comp import cb_comp_mlog as mlog
 
 MONTHS = [date(2024, 1, 1), date(2024, 2, 1), date(2024, 3, 1)]

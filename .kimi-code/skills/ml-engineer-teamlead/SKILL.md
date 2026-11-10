@@ -9,7 +9,7 @@ whenToUse: When accepting gate evidence or deciding a model base/champion switch
 
 **Назначение.** Роль, которая держит процесс «пройденный гейт G-N → shadow → смена базы»: что проверить в evidence, какой вердикт поставить, как заморозить кандидата, провести проспективный shadow и переключить базу в границах арены. Скил не ведёт эксперимент и не считает метрики заново: он принимает или отклоняет доказательства и держит протокол. Надстройка над `AGENTS.md`, а не его замена.
 
-**Канонические документы.** Gate и паспорт run — [`ml-engineer`](../ml-engineer/SKILL.md); разобранный пример смены базы — [cb-comp-live-model-map.md](../../../docs/guides/cb-comp-live-model-map.md) §7.8; MLOps и цикл gates — [ml-experiment-management.md](../../../docs/research/2026-10-18-ml-experiment-management.md) §4/§7; промоушен и live — [2026-10-20-ml-promotion-live-monitoring-design.md](../../../docs/superpowers/specs/2026-10-20-ml-promotion-live-monitoring-design.md); методология — [stat-ml-models.md](../../../docs/guides/stat-ml-models.md) §4/§6.
+**Канонические документы.** Gate и паспорт run — [`ml-engineer`](../ml-engineer/SKILL.md); разобранный пример смены базы — [cb-comp-live-model-map.md](../../../docs/models/cb-comp-live-model-map.md) §7.8; MLOps и цикл gates — [ml-experiment-management.md](../../../docs/research/2026-10-18-ml-experiment-management.md) §4/§7; промоушен и live — [2026-10-20-ml-promotion-live-monitoring-design.md](../../../docs/specs/2026-10-20-ml-promotion-live-monitoring-design.md); методология — [stat-ml-models.md](../../../docs/methodology/stat-ml-models.md) §4/§6.
 
 ## 1. Когда применять
 
@@ -19,18 +19,18 @@ whenToUse: When accepting gate evidence or deciding a model base/champion switch
 - Нужно переключить champion в границах арены, сохранить старую базу/fallback и задать rollback.
 - Спор «числа лучше — значит новая база» или «объявим базой пост-хок контроль абляции».
 
-**Когда не применять:** эксперимент, признак, бэктест, паспорт run, MLflow, `make ml-gate`, live shadow/canary `cbr_rate` — это [`ml-engineer`](../ml-engineer/SKILL.md). Публикация — [`editor-in-chief`](../editor-in-chief/SKILL.md); DDL/витрины/гранты/алерты — [`go-engineer`](../go-engineer/SKILL.md); разведка источника и research-документ — [`research-engineer`](../research-engineer/SKILL.md).
+**Когда не применять:** эксперимент, признак, бэктест, паспорт run, MLflow, `make ml-gate`, live shadow/canary `cbr_rate` — это [`ml-engineer`](../ml-engineer/SKILL.md). Публикация — [`editor-in-chief`](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/.kimi-code/skills/editor-in-chief/SKILL.md); DDL/витрины/гранты/алерты — [`go-engineer`](../go-engineer/SKILL.md); разведка источника и research-документ — [`research-engineer`](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/.kimi-code/skills/research-engineer/SKILL.md).
 
 ## 2. Что прочитать перед стартом
 
 1. [AGENTS.md](../../../AGENTS.md) — правила 1–12, окружение, приёмка.
-2. Владеющий роадмап, зонтичный issue линии и issue кандидата — [ROADMAP_INDEX.md](../../../docs/ROADMAP_INDEX.md); не открывай закрытые вопросы без новых данных.
+2. Владеющий роадмап, зонтичный issue линии и issue кандидата — [ROADMAP_INDEX.md](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/docs/ROADMAP_INDEX.md); не открывай закрытые вопросы без новых данных.
 3. [`ml-engineer`](../ml-engineer/SKILL.md) §4–§7 (эксперимент, паспорт, gate) и §8.1–8.5 (промоушен и live): evidence должно быть там, а не только в PR-тексте.
-4. [cb-comp-live-model-map.md](../../../docs/guides/cb-comp-live-model-map.md) §7.8 — применение протокола к G11 Task 4b (`wk_mix_ex`).
+4. [cb-comp-live-model-map.md](../../../docs/models/cb-comp-live-model-map.md) §7.8 — применение протокола к G11 Task 4b (`wk_mix_ex`).
 5. [ml-experiment-management.md](../../../docs/research/2026-10-18-ml-experiment-management.md) §4 (паспорт run) и §7 (цикл и gates).
-6. Промоушен и live — [2026-10-20-ml-promotion-live-monitoring-design.md](../../../docs/superpowers/specs/2026-10-20-ml-promotion-live-monitoring-design.md); для ставки — [KEY_RATE_MODEL.md](../../../docs/KEY_RATE_MODEL.md) §4/§6.
+6. Промоушен и live — [2026-10-20-ml-promotion-live-monitoring-design.md](../../../docs/specs/2026-10-20-ml-promotion-live-monitoring-design.md); для ставки — [KEY_RATE_MODEL.md](../../../docs/models/key-rate.md) §4/§6.
 7. Спека, план, gate-артефакт и отчёт кандидата: спека должна быть раньше кода и прогона; правки после результата — оговорка, а не норма.
-8. [stat-ml-models.md](../../../docs/guides/stat-ml-models.md) §4 (валидация) и §6 (ловушки).
+8. [stat-ml-models.md](../../../docs/methodology/stat-ml-models.md) §4 (валидация) и §6 (ловушки).
 
 ## 3. Границы роли
 
@@ -126,9 +126,9 @@ whenToUse: When accepting gate evidence or deciding a model base/champion switch
 ## 10. Ссылки
 
 - Gate и эксперимент: [`ml-engineer`](../ml-engineer/SKILL.md), §4–§7 и §8.1–8.5.
-- Смена базы на линии #419: [cb-comp-live-model-map.md](../../../docs/guides/cb-comp-live-model-map.md) §7.8; [P0.6 отчёт](../../../docs/research/2026-10-31-cb-comp-h1-shadow-p06.md), [JSON shadow](../../../docs/research/cb-comp-h1-shadow/2026-10.json).
+- Смена базы на линии #419: [cb-comp-live-model-map.md](../../../docs/models/cb-comp-live-model-map.md) §7.8; [P0.6 отчёт](../../../docs/research/2026-10-31-cb-comp-h1-shadow-p06.md), [JSON shadow](../../../docs/research/cb-comp-h1-shadow/2026-10.json).
 - MLOps: [2026-10-18-ml-experiment-management.md](../../../docs/research/2026-10-18-ml-experiment-management.md) §4/§7.
-- Промоушен и live: [2026-10-20-ml-promotion-live-monitoring-design.md](../../../docs/superpowers/specs/2026-10-20-ml-promotion-live-monitoring-design.md).
-- Методология: [stat-ml-models.md](../../../docs/guides/stat-ml-models.md) §4/§6; контур ставки — [KEY_RATE_MODEL.md](../../../docs/KEY_RATE_MODEL.md) §4/§6.
-- Роадмапы: [ROADMAP_INDEX.md](../../../docs/ROADMAP_INDEX.md), [ROADMAP_KEY_RATE.md](../../../docs/ROADMAP_KEY_RATE.md) фаза 4.
-- Общие правила: [AGENTS.md](../../../AGENTS.md); диспатч — [`subagent-dispatch`](../subagent-dispatch/SKILL.md).
+- Промоушен и live: [2026-10-20-ml-promotion-live-monitoring-design.md](../../../docs/specs/2026-10-20-ml-promotion-live-monitoring-design.md).
+- Методология: [stat-ml-models.md](../../../docs/methodology/stat-ml-models.md) §4/§6; контур ставки — [KEY_RATE_MODEL.md](../../../docs/models/key-rate.md) §4/§6.
+- Роадмапы: [ROADMAP_INDEX.md](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/docs/ROADMAP_INDEX.md), [ROADMAP_KEY_RATE.md](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/docs/ROADMAP_KEY_RATE.md) фаза 4.
+- Общие правила: [AGENTS.md](../../../AGENTS.md); диспатч — [`subagent-dispatch`](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/.kimi-code/skills/subagent-dispatch/SKILL.md).

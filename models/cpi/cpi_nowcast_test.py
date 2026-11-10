@@ -1,22 +1,22 @@
 #!/usr/bin/env python3
-"""Тесты scripts/models/cpi/cpi_nowcast.py.
+"""Тесты models/cpi/cpi_nowcast.py.
 
 Запуск из корня репозитория (pytest не нужен):
 
     uv run --with "catboost>=1.2" --with scikit-learn --with pandas \
         --with "statsmodels>=0.15" --with scipy --python 3.12 \
-        python3 scripts/models/cpi/cpi_nowcast_test.py -v
+        python3 models/cpi/cpi_nowcast_test.py -v
 
 (`--python 3.12` — конвенция репозитория для uv-прогонов; Makefile пинует тот же
 интерпретатор.)
 
 Набор ОФЛАЙН: обращения к ClickHouse подменяются `unittest.mock`, данные берутся
-из фикстур `scripts/testdata/cpi_nowcast/*.csv`. Живая проверка — отдельный ручной
+из фикстур `testdata/cpi_nowcast/*.csv`. Живая проверка — отдельный ручной
 шаг `make cpi-nowcast`.
 
 ФИКСТУРЫ ПЕРЕСОБИРАЮТСЯ ИЗ ЖИВОГО DEV-CLICKHOUSE (пользователь default):
 
-    make cpi-nowcast ARGS="--export-fixtures scripts/testdata/cpi_nowcast"
+    make cpi-nowcast ARGS="--export-fixtures testdata/cpi_nowcast"
 
 Окна срезов: `weekly_2022.csv` — 2021-12-01…2022-05-31 (фактически 2022-01-10…
 2022-05-27: глубже недельных данных нет); `weekly_recent.csv` — 2026-09-14…
@@ -56,12 +56,12 @@ from sklearn.exceptions import ConvergenceWarning
 from sklearn.linear_model import ElasticNetCV
 from sklearn.model_selection import TimeSeriesSplit
 
-# Модуль и тест лежат рядом, запуск прямой (`python3 scripts/...`), поэтому его
+# Модуль и тест лежат рядом, запуск прямой (`python3 <путь>.py`), поэтому его
 # каталог добавляется в sys.path до импорта.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from models.cpi import cpi_nowcast as cm
-from lib import eval_utils as eu
+from bi_ml import eval_utils as eu
 
 FIXTURE_DIR = Path(__file__).resolve().parents[2] / "testdata" / "cpi_nowcast"
 

@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Тесты scripts/key_rate_forecast_log.py.
+"""Тесты tools/forecast_log.py.
 
 Запуск из корня репозитория (pytest не нужен):
 
-    python3 scripts/key_rate_forecast_log_test.py -v
+    python3 tools/forecast_log_test.py -v
 
 Набор ОФЛАЙН: HTTP-транспорт замокан (`urllib.request.urlopen`), файлы артефактов
 создаются во временном каталоге. Живая проверка — отдельный шаг: запущенный
@@ -21,11 +21,11 @@ import unittest.mock
 import urllib.error
 from pathlib import Path
 
-# Модуль и тест лежат рядом, запуск прямой (`python3 scripts/...`), поэтому его
+# Модуль и тест лежат рядом, запуск прямой (`python3 <путь>.py`), поэтому его
 # каталог добавляется в sys.path до импорта.
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-import key_rate_forecast_log as kw
+import forecast_log as kw
 
 # Артефакт модели в формате после этого пункта: rate_before — ставка на дату
 # среза, методы — шаги в б.п.; вероятности ordered_logit — доли.

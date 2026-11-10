@@ -306,7 +306,7 @@ def ch_exec(sql: str) -> None:
     веток две: `OSError` (`URLError`, `RemoteDisconnected`, таймауты) и
     `http.client.HTTPException` (`IncompleteRead`, `BadStatusLine`) — вторые
     НЕ являются `OSError` и без отдельной ветки уносили бы `finish`
-    `ml_experiment` без локального паспорта.
+    `bi_ml.experiment` без локального паспорта.
     """
     config = ch_config()
     password = config["password"]

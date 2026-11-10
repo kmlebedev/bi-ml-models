@@ -2,7 +2,7 @@
 """Gate промоушена ML-моделей и live-оценка shadow/canary.
 
 Пункт роадмапа `infra/4.3` (issue #184), спека
-`docs/superpowers/specs/2026-10-20-ml-promotion-live-monitoring-design.md`.
+`docs/specs/2026-10-20-ml-promotion-live-monitoring-design.md`.
 
 Два режима:
 
@@ -32,10 +32,12 @@ from dataclasses import asdict, dataclass
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from lib.eval_utils import block_bootstrap_rmse_diff, diebold_mariano, rmse
-from lib.clickhouse import ch_query
-
 ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from bi_ml.eval_utils import block_bootstrap_rmse_diff, diebold_mariano, rmse
+from bi_ml.clickhouse import ch_query
 
 # Предрегистрированные константы gate (спека §3.1).
 MIN_PRIMARY_FOLDS = 12

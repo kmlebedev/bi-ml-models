@@ -2,7 +2,7 @@
 """CPI monthly industry: отраслевые МП-признаки в компонентном nowcast ИПЦ.
 
 Stage 2 пункта `key-rate/phase-4-ml-components` (issue #235, родитель #76),
-спека `docs/superpowers/specs/2026-10-19-cpi-industry-mp-features-design.md`.
+спека `docs/specs/2026-10-19-cpi-industry-mp-features-design.md`.
 
 Идея: 16 публичных отраслевых листов `mp_survey_data.xlsx` (IBK, ценовые
 ожидания, издержки) дают месячные признаки за M−1, доступные к cutoff
@@ -22,7 +22,7 @@ As-of отраслевой точки `P` — конец `P+1` (`cpi_monthly.ava
 
 Скрипт только читает ClickHouse и публичный xlsx; в БД данные не пишет.
 Запуск — `make cpi-monthly-industry` (env подключает Makefile), тесты —
-`scripts/models/cpi/cpi_monthly_industry_test.py`.
+`models/cpi/cpi_monthly_industry_test.py`.
 """
 
 import argparse
@@ -45,13 +45,13 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 from models.cpi import cpi_monthly as cm
 from models.cpi import cpi_monthly_v3 as cmv3
-from lib import eval_utils as eu
-from lib import ml_experiment as mlx
+from bi_ml import eval_utils as eu
+from bi_ml import experiment as mlx
 from models.cpi.cpi_public_panel_audit import (
     INDUSTRY_SHEETS,
     MP_INDICATORS,
@@ -843,7 +843,7 @@ def decide(pairs: dict) -> dict:
 def write_report(path: Path, payload: dict) -> None:
     lines = ["# CPI monthly industry: отраслевые МП-признаки — отчёт прогона", ""]
     lines.append(
-        "> `scripts/models/cpi/cpi_monthly_industry.py`; пункт "
+        "> `models/cpi/cpi_monthly_industry.py`; пункт "
         "`key-rate/phase-4-ml-components` (issue #235), Stage 2. "
         "Числа не редактируются руками."
     )
@@ -1078,7 +1078,7 @@ def run(
                     for row in rows
                 ],
                 spec_path=(
-                    "docs/superpowers/specs/"
+                    "docs/specs/"
                     "2026-10-19-cpi-industry-mp-features-design.md"
                 ),
                 enabled=True,

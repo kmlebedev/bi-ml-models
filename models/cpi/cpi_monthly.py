@@ -2,7 +2,7 @@
 """CPI monthly (ML-трек v2): данные, as-of, выборка, walk-forward и бенчмарки.
 
 Срез месячного nowcast ИПЦ РФ (спека
-`docs/superpowers/specs/2026-10-18-cpi-monthly-mp-design.md`, §2–§5.1): выборка
+`docs/specs/2026-10-18-cpi-monthly-mp-design.md`, §2–§5.1): выборка
 **155 месяцев 2013-10…2026-08** и два информационных множества на ОДНИХ И ТЕХ
 ЖЕ строках — «без МП» (5 числовых + `month`) и «с МП» (плюс 7 признаков
 мониторинга предприятий ЦБ из `cbr_survey`). Task 2 добавляет harness
@@ -88,7 +88,7 @@ walk-forward, обязательные бенчмарки B1–B3 (B3 — в д�
   `data_asof`, 4 CatBoost-модели с `metadata`, `benchmarks`, `bottomup_weights`,
   `sample_size`, `note`; stale-cleanup как в v1;
 * **метрики и отчёт** (§4.2, §5.1) — RMSE/MAE в п.п. через общие функции
-  `scripts/lib/eval_utils.py`, блок «последние 12 фолдов»; отчёт
+  `bi_ml/eval_utils.py`, блок «последние 12 фолдов»; отчёт
   `cpi_monthly_report.md` (выборка, «модель × окно», последние 12 фолдов,
   DM-HLN primary/secondary, блочный бутстрап, веса NNLS, конфигурация
   CatBoost, сплит статьи, «2022 исключён», живой nowcast, «что не проверено»)
@@ -105,17 +105,17 @@ walk-forward, обязательные бенчмарки B1–B3 (B3 — в д�
 **As-of — приближение, а не point-in-time слой** (спека §2.6): точные даты
 публикаций и ревизии рядов не учтены; PIT-слой — отдельный пункт фазы 4.
 
-Фикстуры офлайн-тестов (`scripts/testdata/cpi_monthly/*.csv`) пересобираются из
+Фикстуры офлайн-тестов (`testdata/cpi_monthly/*.csv`) пересобираются из
 живого dev-ClickHouse (пользователь default) той же целью, что и прогон:
 
-    make cpi-monthly ARGS="--export-fixtures scripts/testdata/cpi_monthly"
+    make cpi-monthly ARGS="--export-fixtures testdata/cpi_monthly"
 
 **По умолчанию скрипт только читает ClickHouse**; с `ML_LOG=1` он пишет паспорт
 прогона и fold-предсказания в `ml_runs`/`ml_predictions` через
-`scripts/lib/ml_experiment.py` (спека §8.3), а при недоступном ClickHouse хелпер
+`bi_ml/experiment.py` (спека §8.3), а при недоступном ClickHouse хелпер
 падает обратно в локальный `build/ml-runs` (`ML_LOCAL_DIR`). Без переменной
 артефакты побайтно прежние. Транспорт (`ch_query`) переиспользуется из
-`scripts/models/polyus/aisc.py`, а не копируется. Секреты приходят только из
+`models/polyus/aisc.py`, а не копируется. Секреты приходят только из
 окружения (их подставляет Makefile). Запуск — через `make`:
 
 * `make cpi-monthly` — сводка выборки (155 месяцев 2013-10…2026-08, пропусков
@@ -167,16 +167,16 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
 
 log = logging.getLogger(__name__)
 
 # Скрипт-сосед: переиспользуем транспорт к ClickHouse, а не копируем его.
-sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT))
 
-from lib import eval_utils as eu
-from lib import clickhouse as ch
-from lib import ml_experiment as mlx
+from bi_ml import eval_utils as eu
+from bi_ml import clickhouse as ch
+from bi_ml import experiment as mlx
 
 ch_query = ch.ch_query
 
@@ -2986,11 +2986,11 @@ def render_report(
         f"Дата прогона: {today.isoformat()}; выборка `{sample}` "
         f"({bounds_first.isoformat()[:7]} … {bounds_last.isoformat()[:7]}); "
         f"сид прогона `SEED={SEED}`. Спека: "
-        "`docs/superpowers/specs/2026-10-18-cpi-monthly-mp-design.md` (§2 — данные и "
+        "`docs/specs/2026-10-18-cpi-monthly-mp-design.md` (§2 — данные и "
         "признаки, §3.1–3.4 — CatBoost и бенчмарки, §4.1–4.5 — walk-forward, DM, "
         "сплит статьи и «2022 исключён», §5.3 — живой nowcast, §8.2 — "
         "long-sample); план: "
-        "`docs/superpowers/plans/2026-10-18-cpi-monthly-mp.md`.",
+        "`docs/plans/2026-10-18-cpi-monthly-mp.md`.",
         "",
         "## Выборка",
         "",
@@ -3072,7 +3072,7 @@ def render_report(
         "## Модель × окно",
         "",
         "Ошибка фолда — `прогноз − факт` (п.п., м/м); `n` — число фолдов под "
-        "метрикой. RMSE/MAE — общие функции `scripts/lib/eval_utils.py`. B1 и B2 от "
+        "метрикой. RMSE/MAE — общие функции `bi_ml/eval_utils.py`. B1 и B2 от "
         "набора признаков не зависят; B3 и CatBoost считаются в двух "
         "пространствах (без МП и с МП), чтобы отделить эффект МП от эффекта "
         "алгоритма; CatBoost дополнительно в двух схемах агрегации — direct и "
@@ -3695,7 +3695,7 @@ def run_summary(
     кладёт локальные артефакты; журнал эксперимента — опт-ин.
 
     `ml_log`/`logger`/`run_name` — журнал эксперимента
-    (`scripts/lib/ml_experiment.py`): при `ml_log=True` (или `ML_LOG=1`, если
+    (`bi_ml/experiment.py`): при `ml_log=True` (или `ML_LOG=1`, если
     параметр не задан) после `build_sample` создаётся прогон `cpi_monthly` с
     паспортом, fold-предсказаниями в п.п. и артефактами; явный `logger`
     используется как есть (duck typing), и `ml_log` тогда игнорируется. Сбой
@@ -3790,7 +3790,7 @@ def run_summary(
                 }
                 for row in rows
             ],
-            spec_path="docs/superpowers/specs/2026-10-18-cpi-monthly-mp-design.md",
+            spec_path="docs/specs/2026-10-18-cpi-monthly-mp-design.md",
             enabled=True,
         )
 

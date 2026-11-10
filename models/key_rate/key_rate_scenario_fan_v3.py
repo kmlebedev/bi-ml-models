@@ -1,15 +1,15 @@
 #!/usr/bin/env python3
 """Task 4: channel-complete core + dispersion recalibration (issue #289).
 
-Спека: `docs/superpowers/specs/2026-10-20-cbr-scenario-fan-v3-design.md`
-План: `docs/superpowers/plans/2026-10-20-cbr-scenario-fan-v3.md`
+Спека: `docs/specs/2026-10-20-cbr-scenario-fan-v3-design.md`
+План: `docs/plans/2026-10-20-cbr-scenario-fan-v3.md`
 
 Отличие от Task 3: ядро — ElasticNetCV на всех доступных каналах
 `KEY_RATE_CHANNELS.md` §3 (shock-панель + savings, OFZ, Brent, BOP, ccyb, text);
 дисперсия пересчитана под channel-core — volatility-scaled conformal.
 
 **В `forecast_log` не пишет, в ClickHouse не пишет.** Артефакты локальны;
-`ML_LOG=1` — паспорт run через `ml_experiment`.
+`ML_LOG=1` — паспорт run через `bi_ml.experiment`.
 """
 
 from __future__ import annotations
@@ -29,20 +29,20 @@ from typing import Optional
 import numpy as np
 from sklearn.linear_model import ElasticNetCV
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 from models.key_rate import key_rate_cbr_rule as cr  # noqa: E402
 from models.key_rate import key_rate_model as krm  # noqa: E402
 from models.key_rate import key_rate_scenario_fan as fan1  # noqa: E402
 from models.key_rate import key_rate_scenario_fan_v2 as v2  # noqa: E402
-from lib import ml_experiment as mlx  # noqa: E402
+from bi_ml import experiment as mlx  # noqa: E402
 from models.key_rate import shock_classifier as sc  # noqa: E402
 
 log = logging.getLogger("key_rate_scenario_fan_v3")
 
-SPEC_PATH = "docs/superpowers/specs/2026-10-20-cbr-scenario-fan-v3-design.md"
-PLAN_PATH = "docs/superpowers/plans/2026-10-20-cbr-scenario-fan-v3.md"
+SPEC_PATH = "docs/specs/2026-10-20-cbr-scenario-fan-v3-design.md"
+PLAN_PATH = "docs/plans/2026-10-20-cbr-scenario-fan-v3.md"
 REPORT_NAME = "key_rate_scenario_fan_v3_report.md"
 PREDICTIONS_NAME = "key_rate_scenario_fan_v3_predictions.csv"
 DIAGNOSTICS_NAME = "key_rate_scenario_fan_v3_diagnostics.csv"

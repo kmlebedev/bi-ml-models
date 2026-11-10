@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Офлайн-тесты `scripts/models/cb_comp/cb_comp_parity.py` (issue #190).
+"""Офлайн-тесты `models/cb_comp/cb_comp_parity.py` (issue #190).
 
 Запуск из корня репозитория (pytest не нужен):
 
@@ -33,12 +33,12 @@ import numpy as np
 import pandas as pd
 from openpyxl import Workbook
 
-# Модуль и тест лежат рядом, запуск прямой (`python3 scripts/...`).
+# Модуль и тест лежат рядом, запуск прямой (`python3 <путь>.py`).
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from models.cb_comp import cb_comp_parity as parity
 from models.cpi import cpi_monthly as cm
-from lib import eval_utils as eu
+from bi_ml import eval_utils as eu
 
 
 def _month_range(first: date, last: date) -> list:

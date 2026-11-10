@@ -37,7 +37,7 @@ def payload(**overrides) -> dict:
         "run_date": "2026-10-31",
         "git_sha": "64c1a9b",
         "v1_code_sha": "264ce73",
-        "spec": "docs/superpowers/specs/2026-10-31-cb-comp-h1-shadow-p06-design.md",
+        "spec": "docs/specs/2026-10-31-cb-comp-h1-shadow-p06-design.md",
         "unit": "п.п., м/м SA ИПЦ без КУ (h1-nowcast)",
         "models": {
             "combo3": 0.4966762829675247,

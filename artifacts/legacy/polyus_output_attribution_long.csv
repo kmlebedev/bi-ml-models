@@ -1,0 +1,4 @@
+company,asset,year,production_koz,grade_gpt,tcc,aisc,capex_sustaining,capex_project,closure_costs,source_metric
+PLZL,Sukhoi Log,2025,242.2,,735.0,735.0,0.0,0,0,refined_measured
+PLZL,Sukhoi Log,2026,271.7,,735.0,735.0,0.0,0,0,refined_measured
+PLZL,Sukhoi Log,2027,257.0,,735.0,735.0,0.0,0,0,mean_2025_2026

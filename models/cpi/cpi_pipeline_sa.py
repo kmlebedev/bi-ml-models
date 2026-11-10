@@ -3,7 +3,7 @@
 
 Task 2 конвейера CPI → SA/ожидания → ставка, пункт
 `key-rate/phase-4-cpi-key-rate-pipeline`; спека
-`docs/superpowers/specs/2026-10-20-cpi-key-rate-pipeline-design.md` §6.2.
+`docs/specs/2026-10-20-cpi-key-rate-pipeline-design.md` §6.2.
 
 Модуль — библиотека: на вход подаётся месячный NSA-ряд `[(date, float)]`,
 на выходе — аддитивные сезонные факторы, SA-ряд и применение факторов к

@@ -2,7 +2,7 @@
 """CPI monthly v3 public: компонентный nowcast ИПЦ на публичных данных.
 
 Task 4 пункта `key-rate/phase-4-ml-components` (issue #237, родитель #76),
-спека `docs/superpowers/specs/2026-10-19-cpi-v3-public-design.md`.
+спека `docs/specs/2026-10-19-cpi-v3-public-design.md`.
 
 Идея: собрать production-v3 на публичных данных — 4 официальных компонента
 `rosstat_ipc_mes`, недельные diffusion-признаки Stage 1, отраслевые МП из
@@ -26,7 +26,7 @@ Task 4 пункта `key-rate/phase-4-ml-components` (issue #237, родител
 Скрипт только читает ClickHouse; в БД данные не пишет. `ML_LOG=1` пишет
 паспорт и fold-предсказания в `ml_runs`/`ml_predictions` (и MLflow).
 Запуск — `make cpi-monthly-v3-public`, тесты —
-`scripts/models/cpi/cpi_monthly_v3_public_test.py`.
+`models/cpi/cpi_monthly_v3_public_test.py`.
 """
 
 import argparse
@@ -40,15 +40,15 @@ from pathlib import Path
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 from models.cpi import cpi_monthly as cm
 from models.cpi import cpi_monthly_industry as ci
 from models.cpi import cpi_monthly_v3 as cmv3
-from lib import eval_utils as eu
-from lib import ml_experiment as mlx
-from lib.clickhouse import ch_query
+from bi_ml import eval_utils as eu
+from bi_ml import experiment as mlx
+from bi_ml.clickhouse import ch_query
 
 SEED = cm.SEED
 SAMPLES = ("weekly", "long")
@@ -953,7 +953,7 @@ def write_final_report(path: Path, payload: dict) -> None:
     decision = payload["decision"]
     lines = ["# Модель v3 на публичных данных: отчёт прогона", ""]
     lines.append(
-        "> `scripts/models/cpi/cpi_monthly_v3_public.py`; пункт "
+        "> `models/cpi/cpi_monthly_v3_public.py`; пункт "
         "`key-rate/phase-4-ml-components`, Task 4 (issue #237). "
         "Числа не редактируются руками."
     )
@@ -1291,7 +1291,7 @@ def run_window(
                     for row in rows_h
                 ],
                 spec_path=(
-                    "docs/superpowers/specs/"
+                    "docs/specs/"
                     "2026-10-19-cpi-v3-public-design.md"
                 ),
                 enabled=True,

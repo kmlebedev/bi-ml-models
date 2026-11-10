@@ -2,7 +2,7 @@
 """Живая цель `T_LIVE` 2024-08+ и политика пропусков — P0.3 #480.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-11-01-cb-comp-p03-tlive-target-design.md`.
+спека `docs/specs/2026-11-01-cb-comp-p03-tlive-target-design.md`.
 
 * **цель** — `T_LIVE[h]` (финальная SA) и `T_LIVE_rt[h]` (as-of SA) по
   правилу `renorm_v1`: группа входит в месяц, только если есть SA и вес > 0;
@@ -31,9 +31,9 @@ import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_groups_panel as gp
@@ -369,7 +369,7 @@ def coverage_window(stats: dict, first: date) -> dict:
 
 def load_published(series: list, first: date) -> dict:
     """`{ряд: {месяц: м/м, %}}` из `v_fedstat_ipc` (только чтение)."""
-    from lib.clickhouse import ch_query
+    from bi_ml.clickhouse import ch_query
 
     quoted = ", ".join(f"'{name}'" for name in series)
     rows = ch_query(

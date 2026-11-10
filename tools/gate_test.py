@@ -10,7 +10,7 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-import ml_gate as mg
+import gate as mg
 
 CHAMPION = "11111111-1111-4111-8111-111111111111"
 CHALLENGER = "22222222-2222-4222-8222-222222222222"

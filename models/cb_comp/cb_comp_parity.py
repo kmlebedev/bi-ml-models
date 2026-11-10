@@ -2,7 +2,7 @@
 """Паритет ML-трека с CB_COMP (Кошкин–Крылов, 2025): строгое сравнение.
 
 Пункт `key-rate/phase-4-ml-cb-comp-parity` (issue #190), спека
-`docs/superpowers/specs/2026-10-18-cb-comp-parity-design.md`.
+`docs/specs/2026-10-18-cb-comp-parity-design.md`.
 
 Что делает скрипт:
 
@@ -14,7 +14,7 @@
   выполняется. До обучения жёстко проверяются: RMSE статьи (0.158805 /
   0.296655 / 0.443623 / 0.971459), совпадение двух архивных источников
   прогнозов и normal-флаг `Учитывать` (54 месяца);
-* **признаки** — функции `scripts/models/cpi/cpi_monthly.py` (ML-трек v2) как есть:
+* **признаки** — функции `models/cpi/cpi_monthly.py` (ML-трек v2) как есть:
   базовые `y_lag1`, `y_lag2`, `usd_mm`, `key_rate`, `fao_mm`, `month` и 7
   МП-признаков `cbr_survey`; cutoff месяца — 8-е число M+1, собственный
   таргет месяца в признаки не попадает;
@@ -66,17 +66,17 @@ import pandas as pd
 from catboost import CatBoostRegressor
 from scipy import stats
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
 
 # Скрипт-сосед: признаки, as-of и календарь месяцев переиспользуются из
 # ML-трека v2, а не дублируются. `cpi_monthly.py` — побайтовая копия файла из
 # PR #177 (в `main` его ещё нет); см. спеку §3.2.
-sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT))
 
 from models.cpi import cpi_monthly as cm
 from models.cb_comp import cb_comp_bottomup as bu
-from lib import eval_utils as eu
-from lib import ml_experiment as mlx
+from bi_ml import eval_utils as eu
+from bi_ml import experiment as mlx
 
 # ---------------------------------------------------------------------------
 # Предзарегистрированные константы (спека §5.2; значения пинуются тестами)
@@ -969,7 +969,7 @@ def write_report(path: Path, payload: dict) -> None:
     lines.append("# Паритет nowcast v2 с CB_COMP: отчёт прогона")
     lines.append("")
     lines.append(
-        "> Автоматический отчёт `scripts/models/cb_comp/cb_comp_parity.py`; пункт "
+        "> Автоматический отчёт `models/cb_comp/cb_comp_parity.py`; пункт "
         "`key-rate/phase-4-ml-cb-comp-feature-parity` (issue #221), follow-up #190. "
         "Числа не редактируются руками — интерпретация в "
         "`docs/research/2026-10-19-cb-comp-feature-parity.md`."
@@ -1372,7 +1372,7 @@ def run(
                     for row in parity_rows
                 ],
                 spec_path=(
-                    "docs/superpowers/specs/"
+                    "docs/specs/"
                     "2026-10-19-cb-comp-feature-parity-design.md"
                 ),
                 enabled=True,

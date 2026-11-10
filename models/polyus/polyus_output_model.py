@@ -32,12 +32,12 @@ import csv
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
 
 # Скрипт-сосед: переиспользуем транспорт к ClickHouse, а не копируем его.
 # `ch_query` уже несёт маскирование секретов в тексте ошибок, правильный
 # HTTP-порт (8123, а не нативный 9000) и обработку `RemoteDisconnected`.
-sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT))
 
 from models.polyus import aisc
 
@@ -401,7 +401,7 @@ SQL_HEADER_TEMPLATE = """\
 -- Сид mine_plans: ОПР-выпуск Сухого Лога 2025–2027 (атрибуция руды Вернинской ЗИФ).
 --
 -- СГЕНЕРИРОВАН АВТОМАТИЧЕСКИ, ПРАВИТЬ РУКАМИ НЕЛЬЗЯ: правка будет затёрта
--- следующим прогоном (scripts/models/polyus/polyus_output_model.py, цель `make polyus-output`).
+-- следующим прогоном (models/polyus/polyus_output_model.py, цель `make polyus-output`).
 --
 -- Команда генерации: {command}
 -- Дата генерации: {generated}

@@ -2,7 +2,7 @@
 """H2O AutoML как генератор challenger'а для CPI v4 (#502).
 
 Пункт `key-rate/phase-4-cpi-h2o-automl`, роль ML. Спека
-`docs/superpowers/specs/2026-11-01-cpi-h2o-automl-design.md`.
+`docs/specs/2026-11-01-cpi-h2o-automl-design.md`.
 
 Этапы:
 
@@ -28,18 +28,18 @@ import time
 from datetime import date
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from lib import ml_experiment as mlx  # noqa: E402
+from bi_ml import experiment as mlx  # noqa: E402
 from models.cpi import cpi_monthly as cm  # noqa: E402
 from models.cpi import cpi_monthly_v3 as v3  # noqa: E402
 from models.cpi import cpi_v4_grid as grid  # noqa: E402
 from models.cpi import cpi_v4_leaderboard as lb  # noqa: E402
 from models.cpi import cpi_weekly_aggregate as agg  # noqa: E402
 
-SPEC_PATH = "docs/superpowers/specs/2026-11-01-cpi-h2o-automl-design.md"
+SPEC_PATH = "docs/specs/2026-11-01-cpi-h2o-automl-design.md"
 SELECT_CUTOFF = date(2015, 12, 1)
 SELECT_FOLDS = 3
 MIN_BLOCK = 10

@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Тесты общего транспорта ClickHouse `scripts/lib/clickhouse.py`.
+"""Тесты общего транспорта ClickHouse `bi_ml/clickhouse.py`.
 
 Запуск из корня репозитория (pytest не нужен):
-    python3 scripts/lib/clickhouse_test.py -v
+    python3 bi_ml/clickhouse_test.py -v
 
 Все тесты офлайновые: сеть и живой ClickHouse не нужны.
 """
@@ -16,11 +16,11 @@ import unittest.mock
 import urllib.error
 from pathlib import Path
 
-# Тест лежит в `scripts/lib/`, запуск прямой, поэтому каталог `scripts`
+# Тест лежит в `bi_ml/`, запуск прямой, поэтому каталог `scripts`
 # добавляется в sys.path до импорта пакета.
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from lib import clickhouse as ex
+from bi_ml import clickhouse as ex
 
 
 # Переменные, которые `ch_config()` читает. Тесты, трогающие конфигурацию,
@@ -178,7 +178,7 @@ class TestQueryTransport(unittest.TestCase):
             return _FakeResponse(body)
 
         with unittest.mock.patch(
-            "lib.clickhouse.urllib.request.urlopen", fake_urlopen
+            "bi_ml.clickhouse.urllib.request.urlopen", fake_urlopen
         ):
             ex.ch_query("SELECT 1")
         return captured["request"]
@@ -229,7 +229,7 @@ class TestQueryTransport(unittest.TestCase):
             return _FakeResponse('{"data":[{"v":1112.8}]}')
 
         with unittest.mock.patch(
-            "lib.clickhouse.urllib.request.urlopen", fake_urlopen
+            "bi_ml.clickhouse.urllib.request.urlopen", fake_urlopen
         ):
             self.assertEqual(ex.ch_query("SELECT 1"), [{"v": 1112.8}])
 
@@ -245,7 +245,7 @@ class TestQueryTransport(unittest.TestCase):
             raise http.client.RemoteDisconnected("Remote end closed connection")
 
         with unittest.mock.patch(
-            "lib.clickhouse.urllib.request.urlopen", fake_urlopen
+            "bi_ml.clickhouse.urllib.request.urlopen", fake_urlopen
         ):
             with self.assertRaises(ex.ClickHouseError) as ctx:
                 ex.ch_query("SELECT 1")
@@ -261,7 +261,7 @@ class TestQueryTransport(unittest.TestCase):
                     raise _boom
 
                 with unittest.mock.patch(
-                    "lib.clickhouse.urllib.request.urlopen", fake_urlopen
+                    "bi_ml.clickhouse.urllib.request.urlopen", fake_urlopen
                 ):
                     with self.assertRaises(ex.ClickHouseError):
                         ex.ch_query("SELECT 1")
@@ -277,7 +277,7 @@ class TestQueryTransport(unittest.TestCase):
             raise urllib.error.URLError(f"connection refused for {secret}")
 
         with unittest.mock.patch(
-            "lib.clickhouse.urllib.request.urlopen", fake_urlopen
+            "bi_ml.clickhouse.urllib.request.urlopen", fake_urlopen
         ):
             with self.assertRaises(ex.ClickHouseError) as ctx:
                 ex.ch_query("SELECT 1")
@@ -305,7 +305,7 @@ class TestExecTransport(unittest.TestCase):
 
         with _isolated_env():
             with unittest.mock.patch(
-                "lib.clickhouse.urllib.request.urlopen", fake_urlopen
+                "bi_ml.clickhouse.urllib.request.urlopen", fake_urlopen
             ):
                 ex.ch_exec("INSERT INTO ml_runs FORMAT JSONEachRow\n{}")
         return captured
@@ -333,7 +333,7 @@ class TestExecTransport(unittest.TestCase):
 
         with _isolated_env(CH_IMPORT_PASSWORD=secret):
             with unittest.mock.patch(
-                "lib.clickhouse.urllib.request.urlopen", fake_urlopen
+                "bi_ml.clickhouse.urllib.request.urlopen", fake_urlopen
             ):
                 with self.assertRaises(ex.ClickHouseError) as ctx:
                     ex.ch_exec("INSERT INTO ml_runs FORMAT JSONEachRow\n{}")
@@ -354,7 +354,7 @@ class TestExecTransport(unittest.TestCase):
 
                 with _isolated_env(CH_IMPORT_PASSWORD=secret):
                     with unittest.mock.patch(
-                        "lib.clickhouse.urllib.request.urlopen", fake_urlopen
+                        "bi_ml.clickhouse.urllib.request.urlopen", fake_urlopen
                     ):
                         with self.assertRaises(ex.ClickHouseError) as ctx:
                             ex.ch_exec("INSERT INTO ml_runs FORMAT JSONEachRow\n{}")
@@ -370,7 +370,7 @@ class TestExecTransport(unittest.TestCase):
 
         with _isolated_env():
             with unittest.mock.patch(
-                "lib.clickhouse.urllib.request.urlopen", fake_urlopen
+                "bi_ml.clickhouse.urllib.request.urlopen", fake_urlopen
             ):
                 with self.assertRaises(ex.ClickHouseError) as ctx:
                     ex.ch_exec("INSERT INTO ml_runs FORMAT JSONEachRow\n{}")

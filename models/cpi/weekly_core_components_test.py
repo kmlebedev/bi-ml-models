@@ -18,7 +18,7 @@ import numpy as np
 
 import weekly_core_components as wcc
 
-from lib import eval_utils as eu
+from bi_ml import eval_utils as eu
 
 FIXTURE = Path(__file__).resolve().parent / "testdata" / "weekly_core_components_panel_mini.csv"
 

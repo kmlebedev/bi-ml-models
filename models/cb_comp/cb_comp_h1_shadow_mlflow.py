@@ -50,7 +50,7 @@ import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
 SHADOW_DIR = ROOT / "docs" / "research" / "cb-comp-h1-shadow"
 TRACKING_URI_ENV = "MLFLOW_TRACKING_URI"
 MISSING_URI_MESSAGE = (

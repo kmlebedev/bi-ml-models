@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Тесты scripts/models/key_rate/key_rate_llm_forecast.py.
+"""Тесты models/key_rate/key_rate_llm_forecast.py.
 
 Запуск из корня репозитория (pytest не нужен):
 
-    python3 scripts/models/key_rate/key_rate_llm_forecast_test.py -v
+    python3 models/key_rate/key_rate_llm_forecast_test.py -v
 
 (`--python 3.12` — конвенция репозитория для uv-прогонов; здесь зависимостей
 вне stdlib нет, поэтому тест идёт системным python3, как `harvest_test.py`.)
@@ -26,7 +26,7 @@ import urllib.error
 from datetime import date
 from pathlib import Path
 
-# Модуль и тест лежат рядом, запуск прямой (`python3 scripts/...`), поэтому его
+# Модуль и тест лежат рядом, запуск прямой (`python3 <путь>.py`), поэтому его
 # каталог добавляется в sys.path до импорта.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 

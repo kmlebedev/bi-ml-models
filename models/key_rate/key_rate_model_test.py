@@ -1,21 +1,21 @@
 #!/usr/bin/env python3
-"""Тесты scripts/models/key_rate/key_rate_model.py.
+"""Тесты models/key_rate/key_rate_model.py.
 
 Запуск из корня репозитория (pytest не нужен):
 
     uv run --with "statsmodels>=0.15" --with pandas --with scikit-learn --with scipy \
-        --python 3.12 python3 scripts/models/key_rate/key_rate_model_test.py -v
+        --python 3.12 python3 models/key_rate/key_rate_model_test.py -v
 
 (`--python 3.12` — требование statsmodels>=0.15 (Python>=3.10) и конвенция
 репозитория для uv-прогонов; Makefile пинует тот же интерпретатор.)
 
 Набор ОФЛАЙН: обращения к ClickHouse подменяются `unittest.mock`, данные берутся
-из фикстур `scripts/testdata/key_rate/*.csv`. Живая проверка — отдельный ручной
+из фикстур `testdata/key_rate/*.csv`. Живая проверка — отдельный ручной
 шаг `make key-rate-model`.
 
 ФИКСТУРЫ ПЕРЕСОБИРАЮТСЯ ИЗ ЖИВОГО DEV-CLICKHOUSE (пользователь default):
 
-    make key-rate-model ARGS="--export-fixtures scripts/testdata/key_rate"
+    make key-rate-model ARGS="--export-fixtures testdata/key_rate"
 
 Окно срезов — 2013-01-01…2016-12-31 (имя файлов = фактическое окно). Верхняя
 граница выбрана так, что окно исхода последнего заседания среза (2016-12-16,
@@ -44,7 +44,7 @@ from pathlib import Path
 
 import numpy as np
 
-# Модуль и тест лежат рядом, запуск прямой (`python3 scripts/...`), поэтому его
+# Модуль и тест лежат рядом, запуск прямой (`python3 <путь>.py`), поэтому его
 # каталог добавляется в sys.path до импорта.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
@@ -3822,7 +3822,7 @@ class TestCurrentForecast(unittest.TestCase):
             "E[step]", "б.п.",  # E[step]/шаг в базисных пунктах
             "сам скрипт в журнал",  # оговорка про forecast_log
             "не пишет",
-            "scripts/key_rate_forecast_log.py",
+            "tools/forecast_log.py",
         ):
             self.assertIn(text, block)
         # Раздел отчёта собирается из этого блока тем же путём, что и прогон.

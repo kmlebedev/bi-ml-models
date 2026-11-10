@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Stage 1 two-stage CPI: прогноз `T_SAX(M0)` и `T_CORE(M0)` по недельному SA as-of (#401 W4, gate S1).
 
-Протокол — спека `docs/superpowers/specs/2026-10-29-cpi-two-stage-weekly-sa-design.md` §4 W4
+Протокол — спека `docs/specs/2026-10-29-cpi-two-stage-weekly-sa-design.md` §4 W4
 («Протокол W4», зафиксирован до результатов) и §6.1. Строка `O` (h1), фолды и purge —
 `cpi_two_stage_folds`; недельный SA — as-of срез W1 (вариант КУ `V0`, W2).
 
@@ -20,8 +20,8 @@ from typing import Callable, Optional
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import cpi_two_stage_folds as tf

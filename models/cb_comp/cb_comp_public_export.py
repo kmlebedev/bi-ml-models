@@ -18,10 +18,10 @@ import csv
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
-from lib import clickhouse as ch
+from bi_ml import clickhouse as ch
 
 PUBLIC_SQL = """
 SELECT code, indicator, toString(date) AS date, value

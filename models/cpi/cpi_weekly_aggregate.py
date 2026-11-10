@@ -2,7 +2,7 @@
 """Недельный агрегат ИПЦ 2009+: аудит источников и стыков (#396, Task 1).
 
 Пункт `key-rate/phase-4-cpi-v4-weekly-aggregate-core`, роль ML. Спека
-`docs/superpowers/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md` §1
+`docs/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md` §1
 («Не проверено») и план Task 1. Модуль отвечает на три вопроса:
 
 1. непрерывен ли ряд «Индекс потребительских цен (недельная оценка)» в
@@ -31,8 +31,8 @@ from collections import Counter
 from datetime import date, timedelta
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 WEEKLY_AGGREGATE = "Индекс потребительских цен (недельная оценка)"
 SEAM_TOLERANCE_PP = 0.05
@@ -430,7 +430,7 @@ def build_sample_v4(sample: str, with_diffusion: bool = False) -> tuple:
 
 
 def _load(sql: str) -> list:
-    from lib.clickhouse import ch_query
+    from bi_ml.clickhouse import ch_query
 
     return [(date.fromisoformat(str(row["date"])[:10]), float(row["value"])) for row in ch_query(sql)]
 
@@ -450,7 +450,7 @@ def _source_summary(rows: list) -> dict:
 
 
 def run_audit() -> dict:
-    from lib.clickhouse import ch_query
+    from bi_ml.clickhouse import ch_query
 
     sources = {name: _load(sql) for name, sql in SOURCE_SQL.items()}
     view_rows = _load(VIEW_SQL)

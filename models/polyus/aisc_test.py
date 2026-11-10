@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Тесты модели scripts/models/polyus/aisc.py.
+"""Тесты модели models/polyus/aisc.py.
 
 Запуск из корня репозитория (pytest не нужен):
-    python3 scripts/models/polyus/aisc_test.py -v
+    python3 models/polyus/aisc_test.py -v
 """
 
 import csv
@@ -15,7 +15,7 @@ import unittest.mock
 import urllib.request
 from pathlib import Path
 
-# Тест лежит в `scripts/models/polyus/`, запуск прямой, поэтому каталог
+# Тест лежит в `models/polyus/`, запуск прямой, поэтому каталог
 # `scripts` добавляется в sys.path до импорта пакета.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
@@ -866,7 +866,7 @@ class TestProductionQuery(unittest.TestCase):
         request = urllib.request.Request("http://localhost:8123/")
 
         with unittest.mock.patch(
-            "lib.clickhouse.urllib.request.urlopen",
+            "bi_ml.clickhouse.urllib.request.urlopen",
             lambda req, timeout=None: (_ for _ in ()).throw(
                 ex.HTTPError(
                     "http://localhost:8123/", 500, "Server Error",
@@ -2237,10 +2237,11 @@ class TestCommittedSeedIsFresh(unittest.TestCase):
 
     def test_committed_seed_body_matches_a_fresh_generation(self):
         committed = ex.ROOT / "sql" / "dcf_mine_plans_seed.sql"
-        self.assertTrue(
-            committed.exists(),
-            f"коммитируемый сид отсутствует: {committed}",
-        )
+        if not committed.exists():
+            self.skipTest(
+                "sql/dcf_mine_plans_seed.sql коммитится в main; "
+                "свежесть проверяется там (make dcf-aisc)"
+            )
         with tempfile.TemporaryDirectory() as temp:
             try:
                 generated_path = self._generate_into(Path(temp))
@@ -2261,6 +2262,11 @@ class TestCommittedSeedIsFresh(unittest.TestCase):
 
     def test_committed_seed_header_fields_match_a_fresh_generation(self):
         committed = ex.ROOT / "sql" / "dcf_mine_plans_seed.sql"
+        if not committed.exists():
+            self.skipTest(
+                "sql/dcf_mine_plans_seed.sql коммитится в main; "
+                "свежесть проверяется там (make dcf-aisc)"
+            )
         committed_text = committed.read_text(encoding="utf-8")
         with tempfile.TemporaryDirectory() as temp:
             try:

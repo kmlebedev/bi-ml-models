@@ -30,11 +30,11 @@ from datetime import date, timedelta
 from pathlib import Path
 from typing import Callable, NamedTuple, Optional
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-R_SCRIPT = ROOT / "weeklysa" / "data" / "weekly_cpi_sa_x13.R"
+R_SCRIPT = ROOT / "models" / "cpi" / "weekly_cpi_sa_x13.R"
 # Пин продового скрипта (weeklysa/schema.go `weeklyX13ScriptSHA256`): другой скрипт —
 # другая спецификация, parity с таблицей не имеет смысла.
 SCRIPT_SHA256 = "29f87c53fe620332dd51c4a17402b2175e85db97ea1932273aab8d187d208b6a"
@@ -395,7 +395,7 @@ def make_r_runner() -> Callable:
 
 
 def _query(sql: str) -> list:
-    from lib.clickhouse import ch_query
+    from bi_ml.clickhouse import ch_query
 
     return ch_query(sql)
 

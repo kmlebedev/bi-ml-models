@@ -26,7 +26,7 @@
 
 Модуль ничего не пишет в ClickHouse и не импортирует `cb_comp_parity`
 (parity импортирует его, а не наоборот). Для живого прогона нужен `Rscript` с
-пакетом `fst`: панель экспортируется `scripts/models/cb_comp/cb_comp_panel_export.R` в
+пакетом `fst`: панель экспортируется `models/cb_comp/cb_comp_panel_export.R` в
 `build/cb-comp-parity/` (gitignored). Тесты работают на синтетических
 DataFrame и R не требуют.
 
@@ -45,8 +45,8 @@ import numpy as np
 import pandas as pd
 from catboost import CatBoostRegressor
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 from models.cpi import cpi_monthly as cm
 
@@ -310,7 +310,7 @@ def load_weights(archive: Path, years, specs: list) -> dict:
 def ensure_panel_csv(archive: Path, out_dir: Path, require_full: bool = False) -> tuple:
     """CSV панели из FST; при отсутствии — вызов Rscript-экспортёра.
 
-    R-экспортёр — `scripts/models/cb_comp/cb_comp_panel_export.R`; он не входит в тесты и
+    R-экспортёр — `models/cb_comp/cb_comp_panel_export.R`; он не входит в тесты и
     вызывается только живым прогоном. Если R/fst недоступны, исключение
     называется явно — панель не подменяется синтетикой.
 
@@ -325,7 +325,7 @@ def ensure_panel_csv(archive: Path, out_dir: Path, require_full: bool = False) -
     if require_full and not full_csv.exists():
         missing = True
     if missing:
-        exporter = ROOT / "scripts" / "models" / "cb_comp" / "cb_comp_panel_export.R"
+        exporter = ROOT / "models" / "cb_comp" / "cb_comp_panel_export.R"
         try:
             subprocess.run(
                 ["Rscript", str(exporter), str(archive), str(out_dir)],
@@ -336,7 +336,7 @@ def ensure_panel_csv(archive: Path, out_dir: Path, require_full: bool = False) -
         except FileNotFoundError as error:
             raise RuntimeError(
                 "Rscript не найден: для bottom-up нужен R с пакетом fst; "
-                "экспорт панели — scripts/models/cb_comp/cb_comp_panel_export.R"
+                "экспорт панели — models/cb_comp/cb_comp_panel_export.R"
             ) from error
         except subprocess.CalledProcessError as error:
             raise RuntimeError(

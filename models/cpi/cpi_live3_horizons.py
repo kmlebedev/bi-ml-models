@@ -32,8 +32,8 @@ from datetime import date
 from pathlib import Path
 from typing import Optional
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 from models.cb_comp import cb_comp_live_compare as cbc  # noqa: E402
 from models.cpi import cpi_monthly as cm  # noqa: E402

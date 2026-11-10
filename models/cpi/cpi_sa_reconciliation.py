@@ -2,7 +2,7 @@
 """Сверка SA и core из сырого ИПЦ и недельного SA с ЦБ (#399).
 
 Пункт `key-rate/phase-4-cpi-sa-reconciliation`, роль research. Спека
-`docs/superpowers/specs/2026-10-29-cpi-sa-reconciliation-design.md`.
+`docs/specs/2026-10-29-cpi-sa-reconciliation-design.md`.
 
 Q1 — наш SA из `rosstat_ipc_mes` (STL и X-13; as-of и вся выборка) против SA и
 «Базового ИПЦ» ЦБ (`cbr_indicators_cpd`); Q2 — ИПЦ без КУ из реальных тарифов
@@ -24,8 +24,8 @@ from pathlib import Path
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 R_SCRIPT = Path(__file__).resolve().parent / "cpi_sa_reconciliation_x13.R"
@@ -199,7 +199,7 @@ def _month(text: str) -> date:
 
 
 def _query(sql: str) -> list:
-    from lib.clickhouse import ch_query
+    from bi_ml.clickhouse import ch_query
 
     return ch_query(sql)
 

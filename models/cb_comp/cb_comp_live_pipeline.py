@@ -41,13 +41,13 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 from models.cpi import cpi_monthly as cm
 from models.cpi import cpi_monthly_v3 as v3
 from models.cpi import cpi_public_panel_audit as audit
-from lib import eval_utils as eu
+from bi_ml import eval_utils as eu
 
 COMPONENTS = cm.BOTTOMUP_COMPONENTS
 COMPONENT_LABELS = {
@@ -529,7 +529,7 @@ def git_state() -> dict:
 def render_report(payload: dict) -> str:
     lines = ["# Live-пайплайн CB_COMP: воспроизведение на витринах", ""]
     lines.append(
-        f"> `scripts/models/cb_comp/cb_comp_live_pipeline.py`; as-of `{payload['as_of']}`; "
+        f"> `models/cb_comp/cb_comp_live_pipeline.py`; as-of `{payload['as_of']}`; "
         f"целевой месяц `{payload['target_month']}`. Числа не редактируются руками."
     )
     lines.append("")

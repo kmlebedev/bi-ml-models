@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Офлайн-тесты `scripts/models/cpi/cpi_pipeline_stage2.py`.
+"""Офлайн-тесты `models/cpi/cpi_pipeline_stage2.py`.
 
 Запуск из корня репозитория:
 
@@ -7,7 +7,7 @@
 
 ClickHouse и сеть не нужны: CPI-ряды, ожидания и МП подменяются синтетикой,
 календарь публикаций читается из версионированной фикстуры
-`scripts/testdata/publication_calendar.csv`. Все времена — наивные, московское
+`testdata/publication_calendar.csv`. Все времена — наивные, московское
 время; заседание считается моментом 13:30.
 """
 
@@ -19,16 +19,16 @@ from dataclasses import FrozenInstanceError, replace
 from datetime import date, timedelta
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
-from lib.publication_calendar import PublicationCalendar  # noqa: E402
+from bi_ml.publication_calendar import PublicationCalendar  # noqa: E402
 from models.cpi import cpi_monthly as cm  # noqa: E402
 from models.cpi import cpi_pipeline_stage1 as stage1  # noqa: E402
 from models.cpi import cpi_pipeline_stage2 as stage2  # noqa: E402
 
 CAL = PublicationCalendar.from_csv(
-    ROOT / "scripts" / "testdata" / "publication_calendar.csv"
+    ROOT / "testdata" / "publication_calendar.csv"
 )
 AS_OF = date(2027, 6, 30)
 MEETING = date(2026, 10, 23)

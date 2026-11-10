@@ -2,7 +2,7 @@
 """h3/h6: агрегатный VAR/BVAR (ставка, курс, ценовые ожидания) в комбинации — Task 12 #440.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-10-31-cb-comp-h3-h6-var-design.md`.
+спека `docs/specs/2026-10-31-cb-comp-h3-h6-var-design.md`.
 
 * **`var16`** — VAR по `[log(1 + SA ИПЦ без КУ м/м / 100), Δставка, Δlog USD, SA ценовые ожидания]`,
   окно 2016+, лаг 1…6 по BIC внутри train, помесячное переобучение, накопление
@@ -32,9 +32,9 @@ import numpy as np
 import pandas as pd
 from statsmodels.tsa.api import VAR
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_h1_bs_combo as h1
@@ -584,7 +584,7 @@ def run(archive: Path, panel_csv: Path, public_dir: Path, out_dir: Path) -> dict
 
     configuration = config()
     result = {
-        "spec": "docs/superpowers/specs/2026-10-31-cb-comp-h3-h6-var-design.md",
+        "spec": "docs/specs/2026-10-31-cb-comp-h3-h6-var-design.md",
         "git_sha": lb.git_sha(),
         "config": configuration,
         "config_hash": hashlib.sha256(json.dumps(configuration, sort_keys=True).encode()).hexdigest(),

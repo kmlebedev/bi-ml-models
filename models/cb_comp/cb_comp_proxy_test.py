@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Офлайн-тесты прокси-пути CB_COMP (`scripts/models/cb_comp/cb_comp_proxy.py`).
+"""Офлайн-тесты прокси-пути CB_COMP (`models/cb_comp/cb_comp_proxy.py`).
 
 Транспорт к ClickHouse подменяется: ни один тест не ходит в сеть. Синтетика
 строится так, чтобы тождества были точными (SAAR ↔ м/м, агрегат ↔ компоненты),
@@ -15,8 +15,8 @@ import unittest
 from datetime import date
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 from models.cb_comp import cb_comp_proxy as cbp
 

@@ -14,17 +14,17 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
-from lib import clickhouse as ch
-from lib import eval_utils as eu
-from lib import ml_experiment as mlx
+from bi_ml import clickhouse as ch
+from bi_ml import eval_utils as eu
+from bi_ml import experiment as mlx
 
 ch_query = ch.ch_query
 
 EXPERIMENT = "ppi_expectations_forecast"
 RUN_NAME = "ppi_expectations_forecast__direct_h136"
 ARTIFACT_STEM = "2026-10-21-ppi-expectations-forecast"
-SPEC_PATH = "docs/superpowers/specs/2026-10-21-ppi-note-followups-design.md"
-PLAN_PATH = "docs/superpowers/plans/2026-10-21-ppi-note-followups.md"
+SPEC_PATH = "docs/specs/2026-10-21-ppi-note-followups-design.md"
+PLAN_PATH = "docs/plans/2026-10-21-ppi-note-followups.md"
 PRIMARY_METRIC = "paired_rmse_delta"
 PREDICTION_SCHEMA = (
     "target", "horizon", "origin", "model", "y_true", "y_pred",

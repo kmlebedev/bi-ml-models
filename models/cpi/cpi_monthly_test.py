@@ -1,19 +1,19 @@
 #!/usr/bin/env python3
-"""Тесты scripts/models/cpi/cpi_monthly.py (Task 1: данные, as-of, выборка, признаки).
+"""Тесты models/cpi/cpi_monthly.py (Task 1: данные, as-of, выборка, признаки).
 
 Запуск из корня репозитория (pytest не нужен):
 
     uv run --with "catboost>=1.2" --with scikit-learn --with pandas \
         --with "statsmodels>=0.15" --with scipy --python 3.12 \
-        python3 scripts/models/cpi/cpi_monthly_test.py -v
+        python3 models/cpi/cpi_monthly_test.py -v
 
 Набор ОФЛАЙН: обращения к ClickHouse подменяются `unittest.mock`, данные берутся
-из фикстур `scripts/testdata/cpi_monthly/*.csv`. Живая проверка — отдельный шаг
+из фикстур `testdata/cpi_monthly/*.csv`. Живая проверка — отдельный шаг
 `make cpi-monthly`.
 
 ФИКСТУРЫ ПЕРЕСОБИРАЮТСЯ ИЗ ЖИВОГО DEV-CLICKHOUSE (пользователь default):
 
-    make cpi-monthly ARGS="--export-fixtures scripts/testdata/cpi_monthly"
+    make cpi-monthly ARGS="--export-fixtures testdata/cpi_monthly"
 
 Окна срезов: 2013-01…2014-12 (`*_2013_2014.csv`) — горизонт начала выборки
 (2013-10 требует меток 2013-08 и 2013-09, МП за 2013-08/2013-09 и квартальной
@@ -46,7 +46,7 @@ import numpy as np
 from sklearn.exceptions import ConvergenceWarning
 from sklearn.linear_model import ElasticNetCV as SkElasticNetCV
 
-# Модуль и тест лежат рядом, запуск прямой (`python3 scripts/...`), поэтому его
+# Модуль и тест лежат рядом, запуск прямой (`python3 <путь>.py`), поэтому его
 # каталог добавляется в sys.path до импорта.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 

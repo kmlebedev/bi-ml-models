@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Сценарный веер ставки с shock-aware слоем (Task 1 issue #272).
 
-Спека: `docs/superpowers/specs/2026-10-20-cbr-scenario-fan-design.md`
-План: `docs/superpowers/plans/2026-10-20-cbr-scenario-fan.md`
+Спека: `docs/specs/2026-10-20-cbr-scenario-fan-design.md`
+План: `docs/plans/2026-10-20-cbr-scenario-fan.md`
 
 Скрипт строит распределение шага ставки на заседании по 5 reduced-form
 сценариям КПМ и добавляет shock-aware слой:
@@ -17,7 +17,7 @@
 RMSE/MAE медианы, DM/бутстрап; разбивка по эпизодам.
 
 **В `forecast_log` не пишет, в ClickHouse не пишет.** Артефакты локальны;
-`ML_LOG=1` — паспорт run через `ml_experiment`.
+`ML_LOG=1` — паспорт run через `bi_ml.experiment`.
 
 Запуск — только через `make`:
 
@@ -42,21 +42,21 @@ from typing import Optional
 
 import numpy as np
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
-from lib import eval_utils as eu  # noqa: E402
+from bi_ml import eval_utils as eu  # noqa: E402
 from models.key_rate import key_rate_cbr_rule as cr  # noqa: E402
 from models.key_rate import key_rate_model as krm  # noqa: E402
-from lib import ml_experiment as mlx  # noqa: E402
+from bi_ml import experiment as mlx  # noqa: E402
 from models.key_rate import shock_classifier as sc  # noqa: E402
 
 log = logging.getLogger("key_rate_scenario_fan")
 
 # --- Константы ----------------------------------------------------------------
 
-SPEC_PATH = "docs/superpowers/specs/2026-10-20-cbr-scenario-fan-design.md"
-PLAN_PATH = "docs/superpowers/plans/2026-10-20-cbr-scenario-fan.md"
+SPEC_PATH = "docs/specs/2026-10-20-cbr-scenario-fan-design.md"
+PLAN_PATH = "docs/plans/2026-10-20-cbr-scenario-fan.md"
 REPORT_NAME = "key_rate_scenario_fan_report.md"
 PREDICTIONS_NAME = "key_rate_scenario_fan_predictions.csv"
 DIAGNOSTICS_NAME = "key_rate_scenario_fan_diagnostics.csv"

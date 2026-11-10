@@ -2,7 +2,7 @@
 """CatBoost vs LightGBM/XGBoost на live-конвейере 88 групп — Task 17 #501.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-11-01-cb-comp-backend-compare-design.md`.
+спека `docs/specs/2026-11-01-cb-comp-backend-compare-design.md`.
 
 * **арена** — как Task 9: frozen-обучение 2010-03…2018-12, тест 2019-01…2024-07,
   normal-54; истина — `TARGET_FULL`, справочно — `T_LIVE`;
@@ -15,7 +15,7 @@
 * **паспорт** — `cb_comp_mlog`/MLflow, experiment `cb_comp_88_groups`.
 
 Только чтение ClickHouse и локальных файлов; в БД скрипт не пишет (паспорт
-пишется стандартным `ml_experiment`). Запуск — `make cb-comp-backend-compare`,
+пишется стандартным `bi_ml.experiment`). Запуск — `make cb-comp-backend-compare`,
 тесты — `make cb-comp-backend-compare-test`.
 """
 
@@ -35,9 +35,9 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_h1_bs_combo as hc
@@ -72,7 +72,7 @@ MONTH_CATEGORIES = list(range(1, 13))
 VERSIONS = lb.VERSIONS
 DEFAULT_VERSION = lb.DEFAULT_VERSION
 OUT_DIR = ROOT / "build" / "cb-comp-backend-compare"
-SPEC = "docs/superpowers/specs/2026-11-01-cb-comp-backend-compare-design.md"
+SPEC = "docs/specs/2026-11-01-cb-comp-backend-compare-design.md"
 EVIDENCE_JSON = ROOT / "docs" / "research" / "2026-11-01-cb-comp-backend-compare.json"
 TASK3_PINS = {1: 1.193, 2: 1.013, 3: 1.076, 6: 1.062}
 TASK9_PINS = {1: 1.035, 2: 0.957, 3: 1.010, 6: 0.894}

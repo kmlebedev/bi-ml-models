@@ -2,7 +2,7 @@
 """Решение gate эксперимента 2 (H2): `wkagg_*` на T_NSA (#396 Task 6).
 
 Пункт `key-rate/phase-4-cpi-v4-weekly-aggregate-core`, роль ML. Спека
-`docs/superpowers/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md`
+`docs/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md`
 §7 и поправка §7.2 (однозначное чтение пяти условий). Скрипт ничего не
 обучает: читает ячейки `cpi_v4_grid` (`cell_T_NSA_h*.json` и `*_predictions.csv`)
 из `build/cpi-v4/<выборка>_full/` для `S_L09`, `S_L13`, `S_W22` и пишет
@@ -19,8 +19,8 @@ import json
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import cpi_v4_leaderboard as lb
@@ -223,7 +223,7 @@ def main(argv=None) -> int:
     args = parser.parse_args(argv)
     cells = load_cells(args.cells_dir)
     artifact = {
-        "spec": "docs/superpowers/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md §7/§7.2",
+        "spec": "docs/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md §7/§7.2",
         "reference": REFERENCE,
         "decisions": decide_h2(cells),
         "exploratory": exploratory(args.cells_dir, cells),

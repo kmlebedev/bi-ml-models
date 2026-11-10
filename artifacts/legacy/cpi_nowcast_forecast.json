@@ -1,0 +1,103 @@
+{
+  "forecast_date": "2026-10-18",
+  "target_month": "2026-10-01",
+  "data_asof": "2026-10-18",
+  "catboost_direct": {
+    "forecast": 0.8047828466388014,
+    "metadata": {
+      "loss_function": "RMSE",
+      "random_seed": 20261016,
+      "cat_features": [
+        "month"
+      ],
+      "num_features": [
+        "share_rising_wk",
+        "median_wk",
+        "median_wk4",
+        "gasoline_4w",
+        "usd_20d",
+        "key_rate",
+        "ofz_1y",
+        "fao_mm",
+        "y_lag1"
+      ],
+      "monotone_constraints": {
+        "share_rising_wk": 1,
+        "median_wk": 0,
+        "median_wk4": 1,
+        "gasoline_4w": 1,
+        "usd_20d": 1,
+        "key_rate": 0,
+        "ofz_1y": 0,
+        "fao_mm": 0,
+        "y_lag1": 0,
+        "month": 0
+      },
+      "defaults": {
+        "iterations": 1000,
+        "depth": 6,
+        "l2_leaf_reg": 3,
+        "random_strength": 1,
+        "bootstrap_type": "MVS",
+        "nan_mode": "Min",
+        "leaf_estimation_method": "Newton",
+        "one_hot_max_size": 2
+      }
+    }
+  },
+  "catboost_bottomup": {
+    "forecast": 0.8190972418954228,
+    "metadata": {
+      "loss_function": "RMSE",
+      "random_seed": 20261016,
+      "cat_features": [
+        "month"
+      ],
+      "num_features": [
+        "share_rising_wk",
+        "median_wk",
+        "median_wk4",
+        "gasoline_4w",
+        "usd_20d",
+        "key_rate",
+        "ofz_1y",
+        "fao_mm",
+        "y_lag1"
+      ],
+      "monotone_constraints": {
+        "share_rising_wk": 1,
+        "median_wk": 0,
+        "median_wk4": 1,
+        "gasoline_4w": 1,
+        "usd_20d": 1,
+        "key_rate": 0,
+        "ofz_1y": 0,
+        "fao_mm": 0,
+        "y_lag1": 0,
+        "month": 0
+      },
+      "defaults": {
+        "iterations": 1000,
+        "depth": 6,
+        "l2_leaf_reg": 3,
+        "random_strength": 1,
+        "bootstrap_type": "MVS",
+        "nan_mode": "Min",
+        "leaf_estimation_method": "Newton",
+        "one_hot_max_size": 2
+      }
+    }
+  },
+  "bottomup_weights": {
+    "cpi_food": 0.3798197897203683,
+    "cpi_nonfood": 0.34672154754454965,
+    "cpi_services": 0.2734586627350822
+  },
+  "benchmarks": {
+    "b1_last_value": 0.3499999999999943,
+    "b2_ar1_seasonal": 0.5424247244684277,
+    "b3_elastic_net": 1.0067703204960075
+  },
+  "sample_size": 57,
+  "note": "живой nowcast v0 (спека §5): признаки — as-of даты прогона, а не канонического cutoff; as-of — приближение, не point-in-time слой (§2.4); модели обучены на полной выборке месяцев (не фолд walk-forward); частичное окно: 1 из 4 недель — режим генерации признаков отличается от бэктеста (там строго 4 недели); gasoline_4w приведён к 4-недельному масштабу (множитель 4/1)"
+}

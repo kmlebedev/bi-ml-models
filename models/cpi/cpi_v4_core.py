@@ -2,7 +2,7 @@
 """Эксперимент 3 (H3): `v4c_core_nnls`/`v4d_core_direct` на T_CORE (#396 Task 7).
 
 Пункт `key-rate/phase-4-cpi-v4-weekly-aggregate-core`, роль ML. Спека
-`docs/superpowers/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md`
+`docs/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md`
 §5.2 (признак и модели) и §7.3 (чтение gate). Движок — `cpi_v4_grid`
 (накопленная цель, purge, walk-forward); здесь: состав моделей `T_CORE`,
 наивные прогнозы `B0f`/`M1f`, парные сравнения кандидатов на общих фолдах,
@@ -25,11 +25,11 @@ import time
 from datetime import date
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
-from lib import eval_utils as eu
+from bi_ml import eval_utils as eu
 from models.cpi import cpi_monthly as cm
 from models.cpi import cpi_monthly_v3 as v3
 from models.cpi import cpi_weekly_aggregate as agg
@@ -303,7 +303,7 @@ def decide(out_dir: Path, out: Path) -> dict:
     cells = load_cells(out_dir)
     nowcast_path = out_dir / "core_S_W22_full" / "nowcast_rmse.json"
     artifact = {
-        "spec": "docs/superpowers/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md §7.3",
+        "spec": "docs/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md §7.3",
         "decisions": decide_h3(cells),
         "nowcast_rmse": json.loads(nowcast_path.read_text(encoding="utf-8")) if nowcast_path.exists() else None,
         "cells": {f"{s}:h{h}": c.get("predictions_sha256") for (s, h), c in sorted(cells.items())},

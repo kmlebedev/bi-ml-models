@@ -15,10 +15,10 @@ import unittest
 from datetime import date
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
-from lib import ml_experiment as mlx
+from bi_ml import experiment as mlx
 from models.cpi import cpi_monthly as cm
 from cpi_v4_grid import (
     MODEL_SETS,

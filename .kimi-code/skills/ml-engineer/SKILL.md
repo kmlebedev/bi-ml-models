@@ -9,7 +9,7 @@ whenToUse: When a task involves an ML experiment, model, feature set, backtest, 
 
 **Назначение.** Единый маршрут для ML-задач: что прочитать, как провести эксперимент, как его оценить, как пройти gate и shadow/canary, как смотреть live-точность и где граница с Go-разработкой. Скил — надстройка над `AGENTS.md`, а не его замена.
 
-**Канонические документы.** Методология — [stat-ml-models.md](../../../docs/guides/stat-ml-models.md); MLOps и паспорт run — [ml-experiment-management.md](../../../docs/research/2026-10-18-ml-experiment-management.md); контур ставки — [KEY_RATE_MODEL.md](../../../docs/KEY_RATE_MODEL.md); промоушен и live — [2026-10-20-ml-promotion-live-monitoring-design.md](../../../docs/superpowers/specs/2026-10-20-ml-promotion-live-monitoring-design.md); ревью ML-issue — [2026-10-19-ml-issue-review.md](../../../docs/research/2026-10-19-ml-issue-review.md).
+**Канонические документы.** Методология — [stat-ml-models.md](../../../docs/methodology/stat-ml-models.md); MLOps и паспорт run — [ml-experiment-management.md](../../../docs/research/2026-10-18-ml-experiment-management.md); контур ставки — [KEY_RATE_MODEL.md](../../../docs/models/key-rate.md); промоушен и live — [2026-10-20-ml-promotion-live-monitoring-design.md](../../../docs/specs/2026-10-20-ml-promotion-live-monitoring-design.md); ревью ML-issue — [2026-10-19-ml-issue-review.md](../../../docs/research/2026-10-19-ml-issue-review.md).
 
 ## 1. Когда применять
 
@@ -19,28 +19,28 @@ whenToUse: When a task involves an ML experiment, model, feature set, backtest, 
 - Промоушен challenger'а: gate DM/MCS, shadow/canary, rollback, разбор live-ошибки и алертов.
 - Подготовка ML-раздела публикации или ответа «модель лучше/хуже бенчмарка».
 
-**Когда не применять:** приёмка гейта G-N и смена базы — [`ml-engineer-teamlead`](../ml-engineer-teamlead/SKILL.md); чистый Go-импортёр, DDL/витрина/грант, дашборд без ML-содержания, инфраструктура сборки. Это зона `AGENTS.md` и [IMPORTER_PACKAGE_STANDARD.md](../../../docs/IMPORTER_PACKAGE_STANDARD.md).
+**Когда не применять:** приёмка гейта G-N и смена базы — [`ml-engineer-teamlead`](../ml-engineer-teamlead/SKILL.md); чистый Go-импортёр, DDL/витрина/грант, дашборд без ML-содержания, инфраструктура сборки. Это зона `AGENTS.md` и [IMPORTER_PACKAGE_STANDARD.md](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/docs/IMPORTER_PACKAGE_STANDARD.md).
 
 ## 2. Что прочитать перед стартом
 
 1. [AGENTS.md](../../../AGENTS.md) — правила 1–12, окружение, приёмка.
-2. Владеющий роадмап и issue пункта — [ROADMAP_INDEX.md](../../../docs/ROADMAP_INDEX.md); не делай работу вне пункта.
-3. [stat-ml-models.md](../../../docs/guides/stat-ml-models.md) §4 (валидация), §6 (ловушки), §7 (данные).
+2. Владеющий роадмап и issue пункта — [ROADMAP_INDEX.md](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/docs/ROADMAP_INDEX.md); не делай работу вне пункта.
+3. [stat-ml-models.md](../../../docs/methodology/stat-ml-models.md) §4 (валидация), §6 (ловушки), §7 (данные).
 4. [ml-experiment-management.md](../../../docs/research/2026-10-18-ml-experiment-management.md) §4 (паспорт run), §7 (цикл и gates).
-5. [KEY_RATE_MODEL.md](../../../docs/KEY_RATE_MODEL.md) §4/§6 — если задача про ставку или CPI-nowcast.
-6. Для линии live 88 групп / `combo3` — [cb-comp-live-model-map.md](../../../docs/guides/cb-comp-live-model-map.md): model card, данные, канонические числа, реестр исследований, что уже отвергнуто, следующие шаги и §7.8 — разобранный пример смены базы; сам процесс приёмки гейта и смены базы — [`ml-engineer-teamlead`](../ml-engineer-teamlead/SKILL.md). Не переоткрывать закрытые вопросы без новых данных.
-7. Спека/план своего пункта; для промоушена и live — [2026-10-20-ml-promotion-live-monitoring-design.md](../../../docs/superpowers/specs/2026-10-20-ml-promotion-live-monitoring-design.md); для витрин/грантов — [IMPORTER_PACKAGE_STANDARD.md](../../../docs/IMPORTER_PACKAGE_STANDARD.md).
+5. [KEY_RATE_MODEL.md](../../../docs/models/key-rate.md) §4/§6 — если задача про ставку или CPI-nowcast.
+6. Для линии live 88 групп / `combo3` — [cb-comp-live-model-map.md](../../../docs/models/cb-comp-live-model-map.md): model card, данные, канонические числа, реестр исследований, что уже отвергнуто, следующие шаги и §7.8 — разобранный пример смены базы; сам процесс приёмки гейта и смены базы — [`ml-engineer-teamlead`](../ml-engineer-teamlead/SKILL.md). Не переоткрывать закрытые вопросы без новых данных.
+7. Спека/план своего пункта; для промоушена и live — [2026-10-20-ml-promotion-live-monitoring-design.md](../../../docs/specs/2026-10-20-ml-promotion-live-monitoring-design.md); для витрин/грантов — [IMPORTER_PACKAGE_STANDARD.md](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/docs/IMPORTER_PACKAGE_STANDARD.md).
 
 ## 3. Границы ролей
 
 | ML-инженер / агент | Go-разработчик |
 |---|---|
-| Python в `scripts/`, офлайн-тесты, анализ, спеки/планы ML-пунктов | Go-импортёры, DDL, витрины, гранты, ingest endpoints |
-| Чтение ClickHouse через MCP `mcp__clickhouse__run_query` (`kimi_reader`) | Схема ClickHouse, `sql/mcp_kimi_reader.sql`, `make mcp-check` |
-| MLflow runs, `ML_LOG`, артефакты, `forecast_log` payload | `make all`, CI, сборка, инфраструктура расписаний |
+| Python в `models/`, `bi_ml/`, `tools/`, офлайн-тесты, анализ, спеки/планы ML-пунктов | Go-импортёры, DDL, витрины, гранты, ingest endpoints |
+| Чтение ClickHouse через MCP `mcp__clickhouse__run_query` (`kimi_reader`) | Схема ClickHouse, `sql/mcp_kimi_reader.sql`, `make mcp-check` (main) |
+| MLflow runs, `ML_LOG`, артефакты, `forecast_log` payload | `make all`, CI, сборка, инфраструктура расписаний (main) |
 | Интерпретация DM/CI/калибровки, ML-раздел публикации | Архитектура, README/ARCHITECTURE, приёмочный контур |
 
-**Смежные роли.** Не-ML Python-инструменты (коллекторы, docs-генератор, MCP-check, forecast-log sender) ведутся по скилу [`python-engineer`](../python-engineer/SKILL.md); разведка источника, аудит покрытия/винтажей и research-документ — по [`research-engineer`](../research-engineer/SKILL.md). Их правила здесь не дублируются.
+**Смежные роли.** Не-ML Python-инструменты (коллекторы, docs-генератор, MCP-check, forecast-log sender) ведутся по скилу [`python-engineer`](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/.kimi-code/skills/python-engineer/SKILL.md); разведка источника, аудит покрытия/винтажей и research-документ — по [`research-engineer`](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/.kimi-code/skills/research-engineer/SKILL.md). Их правила здесь не дублируются.
 
 **Жёстко:** ML-агент не делает ad-hoc `CREATE TABLE`, `INSERT`, `ALTER`, `GRANT` и не меняет Go-пакеты «попутно». Если для эксперимента нужна новая таблица/витрина/грант — это отдельный пункт владеющего роадмапа и Go-импортёр по стандарту; ML-агент готовит спеку/DDL-предложение, применение — за Go-разработчиком.
 
@@ -61,7 +61,7 @@ whenToUse: When a task involves an ML experiment, model, feature set, backtest, 
 9. **Промоушен.** Для CPI с model registry — явный `make mlflow-promote`; для key-rate registry пока нет — решение gate + переход к shadow/canary, alias не используется. Не называть `champion` deployment.
 10. **Shadow/canary.** `make key-rate-forecast-log ARGS="--stage shadow"` — 2 заседания, затем `ARGS="--stage canary"` — 1. Staged-метрики `:shadow`/`:canary` не публикуются; live-оценка — `make ml-gate ARGS="--live --live-track cbr_rate:<track>"`.
 11. **Live и rollback.** Перед публикацией — `make ml-live-check` (при LLM-треке `ARGS="--require-llm"`); после заседания — резолвер, `v_ml_live_accuracy`, `error_bp`; алерты `ml-live-degradation`/`ml-live-freshness` — повод для `hold`/`rollback`, а не для ручной правки журнала.
-12. **Приёмка.** Числа с командой и результатом, «что не проверено», `make all`, `make docs-check`, при необходимости `make mcp-check`; протокол — комментарием в PR; статус роадмапа — тем же PR.
+12. **Приёмка.** Числа с командой и результатом, «что не проверено», `make test` здесь; в main — `make all`, `make docs-check`, при необходимости `make mcp-check`; протокол — комментарием в PR; статус роадмапа — тем же PR.
 
 ## 5. Жёсткие правила
 
@@ -113,14 +113,15 @@ whenToUse: When a task involves an ML experiment, model, feature set, backtest, 
 | `make ml-gate-test` | офлайн-тесты gate (без ClickHouse) |
 | `make ml-live-check` | production-строки на ближайшее заседание до публикации; `ARGS="--require-llm --warn-only"` |
 | `make ml-live-check-test` | офлайн-тесты live-check |
-| `make import STAT=key_rate_views` | создать/обновить `v_key_rate_dashboard` и `v_ml_live_accuracy` (вручную, один раз; повтор идемпотентен) |
+| `make import STAT=key_rate_views` (main) | создать/обновить `v_key_rate_dashboard` и `v_ml_live_accuracy` (вручную, один раз; повтор идемпотентен) |
 | `make mlflow-up/down/status` | локальный MLflow (SQLite + артефакты); `MLFLOW=1` по умолчанию |
 | `make mlflow-preflight` | проверка MLflow API; при недоступности — явный вопрос (не-TTY: `MLFLOW_ALLOW_NO_LOG=1`) |
 | `make mlflow-backfill ARGS="--run-id <uuid>"` | перенос существующего ClickHouse-прогона в MLflow (тег `clickhouse_run_id`) |
 | `make mlflow-export/register/promote/models` | экспорт run'ов, registry, aliases |
-| `make all` / `make docs-check` / `make mcp-check` | CI, docs-портал, MCP end-to-end |
+| `make test` | офлайн-тесты этого репозитория |
+| `make all` / `make docs-check` / `make mcp-check` (main) | CI, docs-портал, MCP end-to-end платформы |
 
-Python-тесты — офлайн, через `uv run --with ... python3 scripts/models/<family>/<name>_test.py` (общие — `scripts/lib/<name>_test.py`). Интерактивные SQL-проверки — MCP `run_query`; скрипты читают ClickHouse своим `ch_query`/env-путём, но не пишут.
+Python-тесты — офлайн: `make test` (наборы `bi_ml`, `tools`, `models`) или `uv run --python 3.12 python3 models/<family>/<name>_test.py`. Интерактивные SQL-проверки — MCP `run_query`; скрипты читают ClickHouse своим `ch_query`/env-путём, но не пишут.
 
 ## 7. Паспорт run и реестр
 
@@ -146,7 +147,7 @@ Python-тесты — офлайн, через `uv run --with ... python3 script
 | `metrics` | RMSE/MAE/bias, DM p, границы 95 % CI, forecast/actual/error по фолдам и агрегату | Только конечные числа; `primary_metric` — имя метрики (тег), а не число. |
 | `artifacts` | `run.json`, `predictions.jsonl`, config/sample JSON, report.md, model card, gate JSON; у каждого — sha256 и размер в паспорте | Артефакт без sha256 не воспроизводим; MLflow — не единственное хранилище. |
 
-`run_id` (канонический UUID) — из staging-run'а; в отчёте, gate-артефакте и `ml_runs`, не только в MLflow UI. `MLFLOW_TRACKING_URI` канонических прогонов — staging-туннель (`http://127.0.0.1:15001`), не локальный dev `:5000`; run, созданный на `build/mlflow`, не evidence. В `scripts/lib/ml_experiment.py` lineage (`config_hash`, `sample_hash`, `git_sha`, `git_dirty`, `spec_path`, `data_asof`) пишется тегами, а `params` — скалярный конфиг: оба варианта immutable, дублировать в оба namespace не нужно.
+`run_id` (канонический UUID) — из staging-run'а; в отчёте, gate-артефакте и `ml_runs`, не только в MLflow UI. `MLFLOW_TRACKING_URI` канонических прогонов — staging-туннель (`http://127.0.0.1:15001`), не локальный dev `:5000`; run, созданный на `build/mlflow`, не evidence. В `bi_ml/experiment.py` lineage (`config_hash`, `sample_hash`, `git_sha`, `git_dirty`, `spec_path`, `data_asof`) пишется тегами, а `params` — скалярный конфиг: оба варианта immutable, дублировать в оба namespace не нужно.
 
 ### 7.2 MLflow vs ClickHouse
 
@@ -208,7 +209,7 @@ Python-тесты — офлайн, через `uv run --with ... python3 script
 | Запуск без preflight | Run молча без лога, gate его не видит | `make mlflow-preflight`; `MLFLOW_ALLOW_NO_LOG=1` — только осознанно. |
 | Ручной alias без gate | Промоушен без DM/CI | `make ml-gate` → `make mlflow-promote` (CPI). |
 
-**Ссылки.** [ml-experiment-management.md](../../../docs/research/2026-10-18-ml-experiment-management.md) §4 (паспорт) и §7 (цикл/gates); [promotion spec](../../../docs/superpowers/specs/2026-10-20-ml-promotion-live-monitoring-design.md); P0.6 — [отчёт](../../../docs/research/2026-10-31-cb-comp-h1-shadow-p06.md), [2026-10.json](../../../docs/research/cb-comp-h1-shadow/2026-10.json); скрипты — `scripts/mlflow_preflight.py`, `mlflow_export.py`, `mlflow_backfill.py`, `mlflow_registry.py`; цели — `make mlflow-*`, `make ml-gate`.
+**Ссылки.** [ml-experiment-management.md](../../../docs/research/2026-10-18-ml-experiment-management.md) §4 (паспорт) и §7 (цикл/gates); [promotion spec](../../../docs/specs/2026-10-20-ml-promotion-live-monitoring-design.md); P0.6 — [отчёт](../../../docs/research/2026-10-31-cb-comp-h1-shadow-p06.md), [2026-10.json](../../../docs/research/cb-comp-h1-shadow/2026-10.json); скрипты — `tools/mlflow_preflight.py`, `mlflow_export.py`, `mlflow_backfill.py`, `mlflow_registry.py`; цели — `make mlflow-*`, `make ml-gate`.
 
 ## 8. Промоушен и live: рабочий контур
 
@@ -252,7 +253,7 @@ Python-тесты — офлайн, через `uv run --with ... python3 script
 7. **Shadow/canary.** Для CPI **недоступны**: нет CPI-метрики в `forecast_log`, нет ingest-endpoint и `v_cpi_live_accuracy`. #184 shadow/canary — только `cbr_rate`. Возможен «paper shadow»: ручной месячный nowcast против первой публикации Росстата в research-артефакте; это не production и не алерт.
 8. **Productionization.** Task 6 Go уже сделан: 16 отраслевых листов в `cbr_survey`, витрина `v_cbr_survey`; но v3 **не подключён** к make/dagu production, потому что Task 4/5 дают `iterate`, а покрытие < 50 %. Наличие импортёра — не повод ставить шаг в dagu.
 9. **Rollback.** Если coverage или gate не проходят — остаёмся на `v2_bottomup`/hybrid; production-переключения нет, причина — в gate-артефакте/отчёте.
-10. **DoD.** Gate-артефакт с решением и причиной; coverage-аудит; PIT/as-of; DM/CI; отчёт; `make all`/`make docs-check`; никакой зависимости production-v3 от 87 кодов ОКВЭД2; никаких заявлений о live-мониторинге CPI.
+10. **DoD.** Gate-артефакт с решением и причиной; coverage-аудит; PIT/as-of; DM/CI; отчёт; `make test`; docs — в main; никакой зависимости production-v3 от 87 кодов ОКВЭД2; никаких заявлений о live-мониторинге CPI.
 
 **Чем отличается от key-rate:**
 
@@ -288,7 +289,7 @@ Python-тесты — офлайн, через `uv run --with ... python3 script
 
 ### 8.6 Смена базы — отдельный процесс
 
-Пройденный предрегистрированный гейт G-N (G2…G12 в #419, S1/S2 в #401, gate #76) отвечает на вопрос «стоит ли кандидат проверки на новых данных», а **не** «заменить ли базу». Приёмка гейта, вердикт `shadow`, заморозка кандидата, проспективный shadow, правило решения и переключение в границах арены — процесс и скил [`ml-engineer-teamlead`](../ml-engineer-teamlead/SKILL.md); разобранный пример — [cb-comp-live-model-map.md](../../../docs/guides/cb-comp-live-model-map.md) §7.8.
+Пройденный предрегистрированный гейт G-N (G2…G12 в #419, S1/S2 в #401, gate #76) отвечает на вопрос «стоит ли кандидат проверки на новых данных», а **не** «заменить ли базу». Приёмка гейта, вердикт `shadow`, заморозка кандидата, проспективный shadow, правило решения и переключение в границах арены — процесс и скил [`ml-engineer-teamlead`](../ml-engineer-teamlead/SKILL.md); разобранный пример — [cb-comp-live-model-map.md](../../../docs/models/cb-comp-live-model-map.md) §7.8.
 
 Здесь остаются эксперимент, паспорт run/MLflow, `make ml-gate` и production-промоушен `cbr_rate` (§8.1–8.5). В teamlead передаются `run_id`, gate-артефакт, спека/отчёт, замороженная версия кандидата и ограничения. `promote` после одного бэктеста не ставится.
 
@@ -317,7 +318,7 @@ Python-тесты — офлайн, через `uv run --with ... python3 script
 - [ ] Перед публикацией — `make ml-live-check`; после заседания — `forecast_resolve`, `v_ml_live_accuracy`, `error_bp`.
 - [ ] Вывод сформулирован честно: значимо/незначимо, что не проверено.
 - [ ] Пройденный гейт G-N: вердикт `shadow`, не `promote`; смена базы — по [`ml-engineer-teamlead`](../ml-engineer-teamlead/SKILL.md); здесь DoD заканчивается на gate-артефакте.
-- [ ] Python-тесты, `make all`, `make docs-check`; `make mcp-check` — если схема/гранты/витрина.
+- [ ] Python-тесты `make test`; в main — `make all`, `make docs-check`; `make mcp-check` — если схема/гранты/витрина.
 - [ ] Протокол приёмки — комментарием в PR; статус роадмапа обновлён.
 - [ ] Нет ad-hoc DDL, секретов и изменений Go-кода вне пункта.
 
@@ -350,12 +351,12 @@ Python-тесты — офлайн, через `uv run --with ... python3 script
 ## 12. Ссылки
 
 - Приёмка гейта и смена базы: [`ml-engineer-teamlead`](../ml-engineer-teamlead/SKILL.md).
-- Промоушен и live: [2026-10-20-ml-promotion-live-monitoring-design.md](../../../docs/superpowers/specs/2026-10-20-ml-promotion-live-monitoring-design.md), [план](../../../docs/superpowers/plans/2026-10-20-ml-promotion-live-monitoring.md), [GRAFANA.md](../../../docs/GRAFANA.md).
-- CPI-компоненты (#76): [спека](../../../docs/superpowers/specs/2026-10-19-cpi-components-public-data-design.md), [план](../../../docs/superpowers/plans/2026-10-19-cpi-components-public-data.md), [Stage 1 отчёт](../../../docs/research/2026-10-19-cpi-components-public-data.md), [Stage 2 отчёт](../../../docs/research/2026-10-19-cpi-industry-mp-features.md).
-- Live 88 групп / `combo3` (#419): [карта модели и исследований](../../../docs/guides/cb-comp-live-model-map.md), [спека Task 9](../../../docs/superpowers/specs/2026-10-31-cb-comp-h1-bs-combo-design.md), [отчёт Task 9](../../../docs/research/2026-10-31-cb-comp-88-groups-task9.md).
+- Промоушен и live: [2026-10-20-ml-promotion-live-monitoring-design.md](../../../docs/specs/2026-10-20-ml-promotion-live-monitoring-design.md), [план](../../../docs/plans/2026-10-20-ml-promotion-live-monitoring.md), [GRAFANA.md](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/docs/GRAFANA.md).
+- CPI-компоненты (#76): [спека](../../../docs/specs/2026-10-19-cpi-components-public-data-design.md), [план](../../../docs/plans/2026-10-19-cpi-components-public-data.md), [Stage 1 отчёт](../../../docs/research/2026-10-19-cpi-components-public-data.md), [Stage 2 отчёт](../../../docs/research/2026-10-19-cpi-industry-mp-features.md).
+- Live 88 групп / `combo3` (#419): [карта модели и исследований](../../../docs/models/cb-comp-live-model-map.md), [спека Task 9](../../../docs/specs/2026-10-31-cb-comp-h1-bs-combo-design.md), [отчёт Task 9](../../../docs/research/2026-10-31-cb-comp-88-groups-task9.md).
 - Ревью ML-issue: [2026-10-19-ml-issue-review.md](../../../docs/research/2026-10-19-ml-issue-review.md).
-- Методология: [stat-ml-models.md](../../../docs/guides/stat-ml-models.md) §2–§7.
+- Методология: [stat-ml-models.md](../../../docs/methodology/stat-ml-models.md) §2–§7.
 - MLOps: [2026-10-18-ml-experiment-management.md](../../../docs/research/2026-10-18-ml-experiment-management.md).
-- Контур ставки: [KEY_RATE_MODEL.md](../../../docs/KEY_RATE_MODEL.md) §4/§6; публикации — [KEY_RATE_PUBLICATIONS.md](../../../docs/KEY_RATE_PUBLICATIONS.md).
-- Роадмапы: [ROADMAP_INDEX.md](../../../docs/ROADMAP_INDEX.md), [ROADMAP_INFRA.md](../../../docs/ROADMAP_INFRA.md) §5, [ROADMAP_KEY_RATE.md](../../../docs/ROADMAP_KEY_RATE.md) фаза 4.
-- Общие правила: [AGENTS.md](../../../AGENTS.md); импортёры/DDL — [IMPORTER_PACKAGE_STANDARD.md](../../../docs/IMPORTER_PACKAGE_STANDARD.md).
+- Контур ставки: [KEY_RATE_MODEL.md](../../../docs/models/key-rate.md) §4/§6; публикации — [KEY_RATE_PUBLICATIONS.md](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/docs/KEY_RATE_PUBLICATIONS.md).
+- Роадмапы: [ROADMAP_INDEX.md](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/docs/ROADMAP_INDEX.md), [ROADMAP_INFRA.md](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/docs/ROADMAP_INFRA.md) §5, [ROADMAP_KEY_RATE.md](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/docs/ROADMAP_KEY_RATE.md) фаза 4.
+- Общие правила: [AGENTS.md](../../../AGENTS.md); импортёры/DDL — [IMPORTER_PACKAGE_STANDARD.md](https://github.com/kmlebedev/clickhouse-import-rosstat/blob/main/docs/IMPORTER_PACKAGE_STANDARD.md).

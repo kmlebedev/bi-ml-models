@@ -6,7 +6,7 @@
 приближение таргета «SA ИПЦ без КУ, накопленный прирост h = 1/2/3/6» из
 публичных рядов, посчитать на нём RMSE/MAE нашего месячного nowcast на окне
 статьи 2019-01…2024-07 и сравнить агрегатные числа с опубликованными RMSE
-CB_COMP. Спека — `docs/superpowers/specs/2026-10-18-cb-comp-proxy-design.md`.
+CB_COMP. Спека — `docs/specs/2026-10-18-cb-comp-proxy-design.md`.
 
 Что читает:
 
@@ -43,7 +43,7 @@ SA ИПЦ, `u` — SA ЖКУ, `w_u` — постоянная доля ЖКУ, т
 агрегатные RMSE; сравнение — отношением и абсолютной разницей.
 
 **Скрипт ничего не пишет в ClickHouse** — только читает. Транспорт — `ch_query`
-из `scripts/models/polyus/aisc.py`; секреты приходят из окружения (Makefile).
+из `models/polyus/aisc.py`; секреты приходят из окружения (Makefile).
 Запуск:
 
     make cb-comp-proxy ARGS="--nowcast-csv /path/to/cpi_monthly_predictions.csv"
@@ -68,11 +68,11 @@ from typing import Iterable, Optional
 import numpy as np
 from scipy.optimize import nnls
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
-from lib import eval_utils as eu
-from lib import clickhouse as ch
+from bi_ml import eval_utils as eu
+from bi_ml import clickhouse as ch
 
 ch_query = ch.ch_query
 

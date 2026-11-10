@@ -2,7 +2,7 @@
 """Каркас лидерборда CPI v4 и регрессионный гейт v2/v3 (#396, Task 4).
 
 Пункт `key-rate/phase-4-cpi-v4-weekly-aggregate-core`, роль ML. Спека
-`docs/superpowers/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md`
+`docs/specs/2026-10-28-cpi-v4-weekly-aggregate-core-design.md`
 §4–§7, план Task 4. Здесь — общий слой для экспериментов 1–3:
 
 * сетка 3 таргета (`T_NSA`, `T_SA`, `T_CORE`) × горизонты 1/3/6;
@@ -28,8 +28,8 @@ import sys
 from datetime import date
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 TARGETS = ("T_NSA", "T_SA", "T_CORE")
 HORIZONS = (1, 3, 6)
@@ -164,7 +164,7 @@ def _mde_ratio(err_a: list, err_b: list) -> float:
     if len(err_a) < 2:
         return float("nan")
     import numpy as np
-    from lib import eval_utils as eu
+    from bi_ml import eval_utils as eu
 
     differences = [a * a - b * b for a, b in zip(err_a, err_b)]
     sd = float(np.std(differences, ddof=1))
@@ -179,7 +179,7 @@ def compare_pair(err_left: list, err_right: list, horizon: int) -> dict:
     DM-HLN получает горизонт `h` (поправка на перекрытие окон накопленной цели).
     Отрицательная `delta` — левая модель лучше правой.
     """
-    from lib import eval_utils as eu
+    from bi_ml import eval_utils as eu
 
     if len(err_left) != len(err_right):
         raise ValueError(f"{len(err_left)} ошибок против {len(err_right)}")
@@ -316,7 +316,7 @@ def load_target_series() -> dict:
     `T_SA` — прокси «SA ИПЦ без КУ» с допущениями cb_comp_proxy (вес ЖКУ 0,10,
     рост тарифа 4 %/год); `T_CORE` — «Базовый ИПЦ» SA ЦБ.
     """
-    from lib.clickhouse import ch_query
+    from bi_ml.clickhouse import ch_query
     from models.cb_comp import cb_comp_proxy as proxy
     from models.cpi import cpi_monthly as cm
 

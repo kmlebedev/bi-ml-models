@@ -20,9 +20,11 @@ import json
 import sys
 from pathlib import Path
 
-from lib.clickhouse import ch_query
-
 ROOT = Path(__file__).resolve().parent.parent
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from bi_ml.clickhouse import ch_query
 
 # Треки, которые публикация обязана иметь в журнале. LLM — опционально:
 # статья может выйти без LLM-трека, но если он заявлен, нужен --require-llm.

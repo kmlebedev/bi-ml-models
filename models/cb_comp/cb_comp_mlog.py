@@ -17,10 +17,10 @@ import os
 import sys
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
-from lib import ml_experiment as mlx
+from bi_ml import experiment as mlx
 
 EXPERIMENT = "cb_comp_88_groups"
 UNIT = "pp"
@@ -82,7 +82,7 @@ def build_fold_rows(aggregated: dict, truth: dict, months: list, models, horizon
 
 def start(run_name: str, config, data_asof, sample_meta, sample, spec_path: str,
           tags: dict = None):
-    """`ExperimentRun` или `None`; `ML_LOG` читается здесь же, как в `ml_experiment`."""
+    """`ExperimentRun` или `None`; `ML_LOG` читается здесь же, как в `bi_ml.experiment`."""
     if os.environ.get("ML_LOG") != "1":
         return None
     try:

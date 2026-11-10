@@ -57,15 +57,15 @@ from decimal import Decimal, ROUND_FLOOR
 from pathlib import Path
 from typing import Callable, Optional
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
 
 log = logging.getLogger(__name__)
 
 # Скрипт-сосед: переиспользуем транспорт к ClickHouse, а не копируем его
 # (прецедент `key_rate_model.py`).
-sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT))
 
-from lib import clickhouse as ch
+from bi_ml import clickhouse as ch
 
 ch_query = ch.ch_query
 

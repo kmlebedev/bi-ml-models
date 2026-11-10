@@ -2,7 +2,7 @@
 """EN по 88 группам с окном 2016+ и помесячным переобучением, h3 — Task 11 #439.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-10-31-cb-comp-h3-en16-combo-design.md`.
+спека `docs/specs/2026-10-31-cb-comp-h3-en16-combo-design.md`.
 
 * **`live_cb`** — Task 3 без изменений (`cb_comp_live_bottomup.fit_predict`);
 * **`live_en16`** — `StandardScaler → ElasticNetCV` B3 (`cb_comp_live_en.make_enet`)
@@ -28,9 +28,9 @@ from pathlib import Path
 
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_h1_bs_combo as hb
@@ -284,7 +284,7 @@ def run(archive: Path, panel_csv: Path, public_dir: Path, out_dir: Path) -> dict
     result = evaluate(forecasts, data)
     result.update({
         "checks": checks,
-        "spec": "docs/superpowers/specs/2026-10-31-cb-comp-h3-en16-combo-design.md",
+        "spec": "docs/specs/2026-10-31-cb-comp-h3-en16-combo-design.md",
         "git_sha": lb.git_sha(),
         "inputs": {"panel_csv": lb.sha256(panel_csv), "public_panel_csv": lb.sha256(public_dir / "public_panel.csv"),
                    "sheet_map_csv": lb.sha256(public_dir / "sheet_map.csv"), "target_xlsx": lb.sha256(archive / cp.TARGET_XLSX)},

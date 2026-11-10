@@ -2,7 +2,7 @@
 """h1 paper shadow `wk_mix_ex@v1` и ретро-robustness — P0.6 #453.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-10-31-cb-comp-h1-shadow-p06-design.md`,
+спека `docs/specs/2026-10-31-cb-comp-h1-shadow-p06-design.md`,
 гайд `docs/guides/cb-comp-live-model-map.md` §7.8 (решение `shadow`, пороги
 утверждены владельцем 2026-10-31 и здесь не меняются).
 
@@ -29,9 +29,9 @@ import sys
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_h1_bs_combo as bs9
@@ -98,8 +98,8 @@ BASE_PREDICTIONS = ex.BASE_PREDICTIONS
 EX_PREDICTIONS = ROOT / "build" / "cb-comp-h1-weekly-ex" / "predictions.csv"
 OUT_DIR = ROOT / "build" / "cb-comp-h1-shadow"
 SHADOW_DIR = ROOT / "docs" / "research" / "cb-comp-h1-shadow"
-SPEC = "docs/superpowers/specs/2026-10-31-cb-comp-h1-shadow-p06-design.md"
-SPEC_2009 = "docs/superpowers/specs/2026-10-31-cb-comp-p06-tlive-2009-design.md"
+SPEC = "docs/specs/2026-10-31-cb-comp-h1-shadow-p06-design.md"
+SPEC_2009 = "docs/specs/2026-10-31-cb-comp-p06-tlive-2009-design.md"
 
 
 def is_counted(version: str, month: date) -> bool:

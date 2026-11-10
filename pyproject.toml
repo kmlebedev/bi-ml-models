@@ -1,0 +1,32 @@
+[project]
+name = "bi-ml-models"
+version = "0.1.0"
+description = "Модели прогнозирования: разработка, бэктесты, gate и live-проверки"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy",
+    "pandas",
+    "scipy",
+    "scikit-learn",
+    "statsmodels>=0.15",
+    "catboost>=1.2",
+    "arch",
+    "holidays>=0.60",
+    "openpyxl",
+]
+
+[project.optional-dependencies]
+mlflow = ["mlflow==3.17.1"]
+test = ["mlflow==3.17.1", "lightgbm==4.7.0", "xgboost==3.4.1"]
+notebooks = ["jupyterlab>=4", "nbconvert>=7", "ipykernel", "matplotlib"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["bi_ml*", "tools*", "models*"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

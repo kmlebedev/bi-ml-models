@@ -2,7 +2,7 @@
 """Первый срез модели ключевой ставки: выборка решений, as-of слой и признаки.
 
 Измерительная основа контура ключевой ставки (спека
-`docs/superpowers/specs/2026-10-15-key-rate-model-v0-design.md` §3–4): единица
+`docs/specs/2026-10-15-key-rate-model-v0-design.md` §3–4): единица
 наблюдения — заседание Совета директоров ЦБ по ключевой ставке.
 
 Что делает этот срез:
@@ -77,7 +77,7 @@
 (покрытие, распределение, weighted vs unweighted RMSE/MAE, DM-HLN, топ-10
 пониженных заседаний), а в CSV прогнозов — колонка `weight` (пустая у
 невзвешенных методов). Спека §7:
-`docs/superpowers/specs/2026-10-19-key-rate-shock-classifier-design.md`.
+`docs/specs/2026-10-19-key-rate-shock-classifier-design.md`.
 
 **Текущий прогноз (Task 6).** Ближайшее заседание — первая дата строго позже
 даты прогона (`current_forecast`); признаки прогнозной строки снимаются as-of
@@ -90,11 +90,11 @@
 не делается, JSON не пишется, прогон не падает. Артефакт —
 `key_rate_model_forecast.json` (`FORECAST_NAME`), раздел «Текущий прогноз» —
 в отчёте. В `forecast_log` сам скрипт прогноз НЕ пишет: запись выполняет
-отдельный writer `scripts/key_rate_forecast_log.py` (`make key-rate-forecast-log`)
+отдельный writer `tools/forecast_log.py` (`make key-rate-forecast-log`)
 через ingest-контур (`POST /v1/key_rate_forecast`).
 
 **Консенсус-бенчмарк №4 (спека
-`docs/superpowers/specs/2026-10-19-key-rate-consensus-benchmark-design.md`
+`docs/specs/2026-10-19-key-rate-consensus-benchmark-design.md`
 §2–§4).**
 Медиана макроэкономического опроса ЦБ (`v_cbr_mo_br`, волна доступна с
 `wave_date + 6 дней`) сравнивается с фактической среднегодовой ставкой
@@ -109,13 +109,13 @@ point-in-time слой, витрина и графики.
 
 **По умолчанию скрипт в ClickHouse не пишет** — только читает (прецедент
 `polyus_output_model.py`); с `ML_LOG=1` пишет паспорт и fold-предсказания
-через `scripts/lib/ml_experiment.py` (журнал эксперимента). Транспорт (`ch_query`)
-импортируется из `scripts/models/polyus/aisc.py`, а не копируется: там уже есть
+через `bi_ml/experiment.py` (журнал эксперимента). Транспорт (`ch_query`)
+импортируется из `models/polyus/aisc.py`, а не копируется: там уже есть
 маскирование секретов в текстах ошибок, HTTP-порт 8123 и обработка обрывов
 соединения.
 Общие оценочные функции (RMSE/MAE, DM с поправкой HLN, блочный бутстрап
-разницы RMSE) вынесены в `scripts/lib/eval_utils.py` (`§4` спеки
-`docs/superpowers/specs/2026-10-16-cpi-nowcast-design.md`): ниже от них
+разницы RMSE) вынесены в `bi_ml/eval_utils.py` (`§4` спеки
+`docs/specs/2026-10-16-cpi-nowcast-design.md`): ниже от них
 остались обёртки с прежними именами и значениями по умолчанию.
 Секреты приходят только из окружения (их подставляет Makefile).
 
@@ -129,8 +129,8 @@ point-in-time слой, витрина и графики.
 * `make key-rate-model ARGS="--shock-weights shock_classifier_weights.csv"` —
   взвешенные `taylor`/`ordered_logit`, раздел «Веса шоков» и колонка `weight`
   в CSV (бенчмарки B1–B3 не взвешиваются);
-* `make key-rate-model ARGS="--export-fixtures scripts/testdata/key_rate"` —
-  пересборка CSV-фикстур офлайн-тестов `scripts/models/key_rate/key_rate_model_test.py`.
+* `make key-rate-model ARGS="--export-fixtures testdata/key_rate"` —
+  пересборка CSV-фикстур офлайн-тестов `models/key_rate/key_rate_model_test.py`.
 
 **As-of — приближение, а не point-in-time слой** (спека §4): ревизии
 объясняющих рядов и точные даты публикаций не учтены, полноценный PIT-слой —
@@ -157,20 +157,20 @@ import statsmodels.api as sm
 from statsmodels.miscmodels.ordinal_model import OrderedModel
 from statsmodels.regression.linear_model import RegressionResultsWrapper
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
 
 log = logging.getLogger(__name__)
 
 # Скрипт-сосед: переиспользуем транспорт к ClickHouse, а не копируем его
 # (прецедент `polyus_output_model.py`).
-sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT))
 
 # Скрипты-соседи: транспорт к ClickHouse, общие оценочные функции (RMSE/MAE,
 # DM с HLN, блочный бутстрап; вынесены в `eval_utils.py`, их же переиспользует
-# ML-трек nowcast'а ИПЦ) и журнал экспериментов (`ml_experiment.py`).
-from lib import eval_utils as eu
-from lib import clickhouse as ch
-from lib import ml_experiment as mlx
+# ML-трек nowcast'а ИПЦ) и журнал экспериментов (`bi_ml/experiment.py`).
+from bi_ml import eval_utils as eu
+from bi_ml import clickhouse as ch
+from bi_ml import experiment as mlx
 
 ch_query = ch.ch_query
 
@@ -341,7 +341,7 @@ FORECAST_NAME = "key_rate_model_forecast.json"
 
 # Спека прогона — путь от корня репозитория в паспорте журнала экспериментов
 # (`ml_experiment.start_run(spec_path=...)`).
-SPEC_PATH = "docs/superpowers/specs/2026-10-15-key-rate-model-v0-design.md"
+SPEC_PATH = "docs/specs/2026-10-15-key-rate-model-v0-design.md"
 
 # Все артефакты §8 одним списком — для ранних выходов прогона (пустой календарь,
 # пустая выборка), где не пишется НИ ОДИН из них: даты в именах файлов нет,
@@ -3289,7 +3289,7 @@ def render_report(
         "",
         f"Дата прогона: {today.isoformat()}. Версия набора данных v0 = дата прогона "
         f"+ размер выборки: {len(sample)} заседаний. Спека: "
-        "`docs/superpowers/specs/2026-10-15-key-rate-model-v0-design.md` "
+        "`docs/specs/2026-10-15-key-rate-model-v0-design.md` "
         "(§5 — бенчмарки, §7 — walk-forward/метрики/тесты, §8 — артефакты).",
         "",
         "## Выборка",
@@ -3479,7 +3479,7 @@ def render_report(
         "`climatology` и `ordered_logit` (спека §6/§7).",
         "- **Сам скрипт в журнал (`forecast_log`) не пишет**: текущий прогноз — "
         "локальный артефакт `key_rate_model_forecast.json`; запись выполняет "
-        "отдельный writer `scripts/key_rate_forecast_log.py` через ingest "
+        "отдельный writer `tools/forecast_log.py` через ingest "
         "(пункт `key-rate/phase-4-forecast-log`).",
         "- **Гиперпараметры не подбираются**: ни на полной выборке, ни на "
         "режимном блоке 2024–2026; обе схемы окна — проверка робастности, а "
@@ -3487,7 +3487,7 @@ def render_report(
         "- **Консенсус-бенчмарк №4 — годовой горизонт, а не шаг заседания**: "
         "медиана макроопроса сравнивается с фактической среднегодовой ставкой; "
         "B4 — механическая проекция остатка года, а не прогноз решения "
-        "(`docs/superpowers/specs/2026-10-19-key-rate-consensus-benchmark-design.md` "
+        "(`docs/specs/2026-10-19-key-rate-consensus-benchmark-design.md` "
         "§3).",
     ]
     return "\n".join(lines) + "\n"
@@ -3585,7 +3585,7 @@ def _print_removed_artifacts(removed: list) -> None:
 FORECAST_NOTE = (
     "текущий прогноз v0 (as-of — приближение, спека §4): сам скрипт в журнал "
     "не пишет — запись в forecast_log выполняет отдельный writer "
-    "scripts/key_rate_forecast_log.py"
+    "tools/forecast_log.py"
 )
 
 # Методы текущего прогноза (спека §1: выход первого среза — методы №2 и №3):
@@ -4293,7 +4293,7 @@ def forecast_json(forecast: CurrentForecast) -> str:
     `methods`, `sample_size`, `note`. `forecast_date` — дата прогноза, она же в
     v0 дата среза данных `data_asof` (прогноз считается на живых данных в дату
     прогона); поля разделены под будущий PIT-слой. `rate_before` — ставка на
-    дату среза: writer журнала (`scripts/key_rate_forecast_log.py`) переводит
+    дату среза: writer журнала (`tools/forecast_log.py`) переводит
     шаги методов в ожидаемую ставку без повторного чтения ClickHouse. Других
     полей нет: ни отметок времени, ни путей — JSON детерминирован при (данные,
     дата прогона), и это пиновано тестом двух прогонов.
@@ -4481,7 +4481,7 @@ def run_summary(
     результате этого.
 
     `ml_log`/`logger`/`run_name` — журнал эксперимента
-    (`scripts/lib/ml_experiment.py`): при `ml_log=True` (или `ML_LOG=1`, если
+    (`bi_ml/experiment.py`): при `ml_log=True` (или `ML_LOG=1`, если
     параметр не задан) создаётся прогон `key_rate_model` с паспортом,
     fold-предсказаниями в базисных пунктах и артефактами; явный `logger`
     используется как есть (duck typing). По умолчанию (`ML_LOG` не задан) в
@@ -4530,7 +4530,7 @@ def run_summary(
 
         Журнал — побочный слой: ни сбой `finish`, ни ошибка записи в ClickHouse
         не должны превращать удачный прогон в non-zero exit (сам `finish`
-        `ml_experiment` дополнительно fail-soft: возвращает `"local"`).
+        `bi_ml.experiment` дополнительно fail-soft: возвращает `"local"`).
         """
         if logger is None:
             return

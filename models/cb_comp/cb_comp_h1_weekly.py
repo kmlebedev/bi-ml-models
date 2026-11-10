@@ -2,7 +2,7 @@
 """h1: недельный ИПЦ поверх `combo3` — Task 4 #424.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-10-31-cb-comp-h1-weekly-design.md`.
+спека `docs/specs/2026-10-31-cb-comp-h1-weekly-design.md`.
 
 * **база** — `combo3` Task 9: `mean(live_cb, bs_econ16, bs_rozn16)`;
 * **`live_cb_wk`** — CatBoost группы с недельными признаками `wk_g_mtd`,
@@ -31,9 +31,9 @@ import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_h1_bs_combo as bs9
@@ -582,7 +582,7 @@ def run(archive: Path, panel_csv: Path, public_dir: Path, out_dir: Path, jobs: i
         raise SystemExit(f"R10 не пройден: {r10}")
 
     result = {
-        "spec": "docs/superpowers/specs/2026-10-31-cb-comp-h1-weekly-design.md",
+        "spec": "docs/specs/2026-10-31-cb-comp-h1-weekly-design.md",
         "version": version,
         "git_sha": lb.git_sha(),
         "inputs": {

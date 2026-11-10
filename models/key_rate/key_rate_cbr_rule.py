@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """`cbr_rule` — калиброванное правило ДДКП ЦБ как отдельный трек модели ставки.
 
-Спека: `docs/superpowers/specs/2026-10-20-cbr-rule-design.md`
-План: `docs/superpowers/plans/2026-10-20-cbr-rule.md`
+Спека: `docs/specs/2026-10-20-cbr-rule-design.md`
+План: `docs/plans/2026-10-20-cbr-rule.md`
 Issue: #268 (`key-rate/phase-4-cbr-reaction-function`).
 
 Скрипт НЕ меняет `key_rate_model.py`: выборка решений, as-of слой, walk-forward,
@@ -47,12 +47,12 @@ import numpy as np
 from scipy.stats import norm
 from statsmodels.tsa.filters.hp_filter import hpfilter
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
-from lib import eval_utils as eu  # noqa: E402
+from bi_ml import eval_utils as eu  # noqa: E402
 from models.key_rate import key_rate_model as krm  # noqa: E402
-from lib import ml_experiment as mlx  # noqa: E402
+from bi_ml import experiment as mlx  # noqa: E402
 
 # --- Константы ----------------------------------------------------------------
 
@@ -86,8 +86,8 @@ HOLD_BAND_BP = 12.5
 PROB_EPS = 1e-6
 FINITE_EPS = 1e-12
 
-SPEC_PATH = "docs/superpowers/specs/2026-10-20-cbr-rule-design.md"
-PLAN_PATH = "docs/superpowers/plans/2026-10-20-cbr-rule.md"
+SPEC_PATH = "docs/specs/2026-10-20-cbr-rule-design.md"
+PLAN_PATH = "docs/plans/2026-10-20-cbr-rule.md"
 REPORT_NAME = "key_rate_cbr_rule_report.md"
 PREDICTIONS_NAME = "key_rate_cbr_rule_predictions.csv"
 DIAGNOSTICS_NAME = "key_rate_cbr_rule_diagnostics.csv"

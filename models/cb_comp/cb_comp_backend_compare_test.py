@@ -12,7 +12,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "cpi"))
 
-from lib import ml_experiment as mlx
+from bi_ml import experiment as mlx
 from models.cb_comp import cb_comp_backend_compare as bc
 from models.cb_comp import cb_comp_bottomup as bu
 from models.cb_comp import cb_comp_live_bottomup as lb

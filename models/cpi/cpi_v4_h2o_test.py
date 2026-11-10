@@ -18,8 +18,8 @@ import unittest
 from datetime import date
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 from models.cpi import cpi_v4_h2o as h2o_mod
 from models.cpi import cpi_v4_leaderboard as lb

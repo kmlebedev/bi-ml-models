@@ -55,10 +55,10 @@ import numpy as np
 import statsmodels
 from statsmodels.tsa.statespace.structural import UnobservedComponents
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
-from lib import eval_utils as eu
+from bi_ml import eval_utils as eu
 from weekly_core_proxy import (
     HEADLINE_SQL,
     CORE_SQL,

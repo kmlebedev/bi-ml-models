@@ -2,7 +2,7 @@
 """P0.6 по версиям цели `@2010` и `@2009`: матрица 2×2 и правило смены базы — Task 16 #466.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-10-31-cb-comp-p06-tlive-2009-design.md`.
+спека `docs/specs/2026-10-31-cb-comp-p06-tlive-2009-design.md`.
 
 * **Матрица 2×2** — прогнозы, обученные на `T_LIVE@2010` и `T_LIVE@2009`,
   оцениваются на четырёх истинах: финальной и real-time каждой версии.
@@ -24,9 +24,9 @@ import sys
 from datetime import date
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
-sys.path.insert(0, str(ROOT / "scripts" / "models" / "cpi"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "models" / "cpi"))
 
 from models.cb_comp import cb_comp_live_bottomup as lb
 
@@ -45,7 +45,7 @@ DEFAULT_INPUTS = {
 }
 DEFAULT_SENSITIVITY = SHADOW_DIR.with_name(f"{SHADOW_DIR.name}-2009-train2009")
 OUT_JSON = ROOT / "docs" / "research" / "2026-10-31-cb-comp-p06-tlive-2009.json"
-SPEC = "docs/superpowers/specs/2026-10-31-cb-comp-p06-tlive-2009-design.md"
+SPEC = "docs/specs/2026-10-31-cb-comp-p06-tlive-2009-design.md"
 
 
 def load_predictions(path: Path) -> tuple:

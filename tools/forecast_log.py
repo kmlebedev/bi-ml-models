@@ -2,7 +2,7 @@
 """Запись прогноза ключевой ставки в `forecast_log` через ingest-контур.
 
 Пункт роадмапа `key-rate/phase-4-forecast-log` (issue #127), спека
-`docs/superpowers/specs/2026-10-18-key-rate-forecast-log-design.md`.
+`docs/specs/2026-10-18-key-rate-forecast-log-design.md`.
 
 Единственный путь записи — `POST /v1/key_rate_forecast` ingest-сервиса
 (`cmd/ingest`). Скрипт **не пишет в ClickHouse напрямую** и не читает его: вход —
@@ -12,7 +12,7 @@
 Входы:
 
 * `key_rate_model_forecast.json` (обязателен) — текущий прогноз
-  `scripts/key_rate_model.py`. Строки треков:
+  `models/key_rate/key_rate_model.py`. Строки треков:
   `cbr_rate:taylor` (шаг `step_bp`) и `cbr_rate:ordered_logit` (шаг
   `expected_step_bp` + вероятности классов). `predicted` — ожидаемая СТАВКА
   после заседания: `rate_before + step_bp/100`, где `rate_before` — ставка на

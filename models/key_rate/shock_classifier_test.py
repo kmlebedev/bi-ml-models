@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Офлайн-тесты `scripts/models/key_rate/shock_classifier.py` (Tasks 2–3).
+"""Офлайн-тесты `models/key_rate/shock_classifier.py` (Tasks 2–3).
 
 Запуск из корня репозитория:
 
     uv run --with scikit-learn --with pandas --with "statsmodels>=0.15" \
-        --with scipy --python 3.12 python3 scripts/models/key_rate/shock_classifier_test.py -v
+        --with scipy --python 3.12 python3 models/key_rate/shock_classifier_test.py -v
 
 Набор НЕ обращается к ClickHouse и сети: данные — синтетические фикстуры
-`scripts/testdata/shock_classifier/`, которые пишет и читает сам модуль
+`testdata/shock_classifier/`, которые пишет и читает сам модуль
 (`export_fixtures`/`read_fixtures`). Проверяются:
 
 * правило метки: явный шок = внеочередное И изменение ставки;
@@ -41,7 +41,7 @@ from pathlib import Path
 
 import numpy as np
 
-# Модуль и тест лежат рядом, запуск прямой (`python3 scripts/...`), поэтому его
+# Модуль и тест лежат рядом, запуск прямой (`python3 <путь>.py`), поэтому его
 # каталог добавляется в sys.path до импорта.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
@@ -800,7 +800,7 @@ class ComparisonTest(unittest.TestCase):
 
 
 class FakeLogger:
-    """Duck-typed журнал `ml_experiment`: ловит payload без ClickHouse."""
+    """Duck-typed журнал `bi_ml.experiment`: ловит payload без ClickHouse."""
 
     def __init__(self):
         self.metrics = None

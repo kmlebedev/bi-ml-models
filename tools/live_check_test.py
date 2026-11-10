@@ -6,7 +6,7 @@ import unittest
 from contextlib import redirect_stderr, redirect_stdout
 from unittest import mock
 
-import ml_live_check as mlc
+import live_check as mlc
 
 MEETING = "2026-10-23"
 

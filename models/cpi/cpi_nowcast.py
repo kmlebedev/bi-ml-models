@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """CPI-nowcast (ML-трек контура ставки): выборка, as-of, walk-forward, модели.
 
-Срез ML-трека (спека `docs/superpowers/specs/2026-10-16-cpi-nowcast-design.md`
+Срез ML-трека (спека `docs/specs/2026-10-16-cpi-nowcast-design.md`
 §2–§5): nowcast месячного ИПЦ РФ до публикации Росстата. Здесь — данные (§2),
 харнесс walk-forward (§4), обязательные бенчмарки B1–B3 (§3.3), модели CatBoost
 §3.1–3.2 (`catboost_direct`, покомпонентный `catboost_bottomup` с весами NNLS)
@@ -55,7 +55,7 @@
   (числовые float + int-коды месяца: иначе CatBoost не принимает `cat_features`),
   NaN — как есть (`nan_mode` по умолчанию);
 * **метрики** (§4) — RMSE/MAE в п.п. через общие функции
-  `scripts/lib/eval_utils.py`, DM (поправка HLN, `h=1`) и блочный бутстрап разницы
+  `bi_ml/eval_utils.py`, DM (поправка HLN, `h=1`) и блочный бутстрап разницы
   RMSE (блок 3 месяца, n=2000, seed=SEED) между моделями основного окна;
 * **артефакты** (§5) — `cpi_nowcast_report.md` (таблицы «модель × окно»,
   «последние 12 фолдов», веса NNLS по последнему фолду каждого окна, тесты
@@ -101,10 +101,10 @@ NaN: сейчас это `ofz_1y` во всём бэктесте (у G-curve М�
 **As-of — приближение, а не point-in-time слой** (спека §2.4): точные даты
 публикаций и ревизии рядов не учтены; PIT-слой — отдельный пункт фазы 4.
 
-Фикстуры офлайн-тестов (`scripts/testdata/cpi_nowcast/*.csv`) пересобираются из
+Фикстуры офлайн-тестов (`testdata/cpi_nowcast/*.csv`) пересобираются из
 живого dev-ClickHouse (пользователь default) той же целью, что и прогон:
 
-    make cpi-nowcast ARGS="--export-fixtures scripts/testdata/cpi_nowcast"
+    make cpi-nowcast ARGS="--export-fixtures testdata/cpi_nowcast"
 
 `ofz_2021_2022.csv` при этом получается пустым (только заголовок): окно
 2021–2022 у G-curve пусто (см. ограничение выше). Это осознанное предупреждение,
@@ -112,8 +112,8 @@ NaN: сейчас это `ofz_1y` во всём бэктесте (у G-curve М�
 
 **В ClickHouse скрипт по умолчанию не пишет** — только читает; с `ML_LOG=1`
 паспорт прогона и fold-предсказания уходят в `ml_runs`/`ml_predictions`
-(`scripts/lib/ml_experiment.py`), а без переменной поведение прежнее. Транспорт
-(`ch_query`) переиспользуется из `scripts/models/polyus/aisc.py`, а не
+(`bi_ml/experiment.py`), а без переменной поведение прежнее. Транспорт
+(`ch_query`) переиспользуется из `models/polyus/aisc.py`, а не
 копируется. Секреты приходят только из окружения (их подставляет Makefile).
 Запуск — через `make`:
 
@@ -149,16 +149,16 @@ from sklearn.model_selection import TimeSeriesSplit
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
 
 log = logging.getLogger(__name__)
 
 # Скрипт-сосед: переиспользуем транспорт к ClickHouse, а не копируем его.
-sys.path.insert(0, str(ROOT / "scripts"))
+sys.path.insert(0, str(ROOT))
 
-from lib import eval_utils as eu
-from lib import clickhouse as ch
-from lib import ml_experiment as mlx
+from bi_ml import eval_utils as eu
+from bi_ml import clickhouse as ch
+from bi_ml import experiment as mlx
 
 ch_query = ch.ch_query
 
@@ -2240,10 +2240,10 @@ def render_report(
         "# CPI nowcast — walk-forward бэктест (бенчмарки B1–B3 и CatBoost)",
         "",
         f"Дата прогона: {today.isoformat()}; сид прогона `SEED={SEED}`. Спека: "
-        "`docs/superpowers/specs/2026-10-16-cpi-nowcast-design.md` (§2 — данные и "
+        "`docs/specs/2026-10-16-cpi-nowcast-design.md` (§2 — данные и "
         "признаки, §3.1–3.2 — модели, §3.3 — бенчмарки, §4 — "
         "walk-forward/метрики/тесты); план: "
-        "`docs/superpowers/plans/2026-10-16-cpi-nowcast.md`.",
+        "`docs/plans/2026-10-16-cpi-nowcast.md`.",
         "",
         "## Выборка",
         "",
@@ -2306,7 +2306,7 @@ def render_report(
         "## Метрики (RMSE / MAE, п.п.)",
         "",
         "Ошибка фолда — `прогноз − факт` (п.п., м/м); `n` — число фолдов под "
-        "метрикой. RMSE/MAE — общие функции `scripts/lib/eval_utils.py`.",
+        "метрикой. RMSE/MAE — общие функции `bi_ml/eval_utils.py`.",
         "",
     ]
     lines += _table(_METRIC_HEADER, metric_rows)
@@ -2841,7 +2841,7 @@ def run_summary(
     временный каталог — в тестах. `today` — дата прогона (по умолчанию
     системная): она же дата среза признаков и `forecast_date` JSON.
 
-    `ml_log`/`logger`/`run_name` — журнал эксперимента (`scripts/lib/ml_experiment.py`):
+    `ml_log`/`logger`/`run_name` — журнал эксперимента (`bi_ml/experiment.py`):
     при `ml_log=True` (или `ML_LOG=1`, если параметр не задан) создаётся прогон
     `cpi_nowcast` с паспортом, fold-предсказаниями в п.п. и артефактами; явный
     `logger` используется как есть (duck typing). Без журнала скрипт в ClickHouse
@@ -2896,7 +2896,7 @@ def run_summary(
                 }
                 for row in rows
             ],
-            spec_path="docs/superpowers/specs/2026-10-16-cpi-nowcast-design.md",
+            spec_path="docs/specs/2026-10-16-cpi-nowcast-design.md",
             enabled=True,
         )
 

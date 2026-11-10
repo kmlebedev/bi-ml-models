@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Панель заседаний ЦБ для классификатора шоков ключевой ставки (Task 2).
 
-Спека: `docs/superpowers/specs/2026-10-19-key-rate-shock-classifier-design.md`
+Спека: `docs/specs/2026-10-19-key-rate-shock-classifier-design.md`
 §3–4. Срез даёт измерительную основу классификатора и НЕ трогает
 `key_rate_model`:
 
@@ -88,14 +88,14 @@ SQL-константы переименовывают их в общий `value`
 шоков он описательный и служит проверкой отделимости (спека §6, §11).
 
 Офлайн-тесты (`shock_classifier_test.py`) работают на синтетических CSV
-`scripts/testdata/shock_classifier/`: `export_fixtures(directory)` пишет
+`testdata/shock_classifier/`: `export_fixtures(directory)` пишет
 детерминированный набор (8 заседаний 2021–2022, 2 внеочередных, разные даты
 публикации каналов, `infl_exp_*` отсутствуют на первом заседании), а
 `read_fixtures(directory)` читает его обратно. ClickHouse и сеть в тестах не
 нужны.
 
 Живой прогон (Task 5) читает ClickHouse только через `key_rate_model.ch_query`
-(транспорт `scripts/models/polyus/aisc.py`); этот срез в ClickHouse не пишет.
+(транспорт `models/polyus/aisc.py`); этот срез в ClickHouse не пишет.
 """
 
 from __future__ import annotations
@@ -118,14 +118,14 @@ from sklearn.covariance import LedoitWolf
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import average_precision_score, roc_auc_score
 
-ROOT = Path(__file__).resolve().parents[3]
+ROOT = Path(__file__).resolve().parents[2]
 
 # Модуль-сосед: переиспользуем выборку решений, as-of и разбор строк, а не
-# копируем их. `key_rate_model` сам добавляет `scripts/` в `sys.path`.
-sys.path.insert(0, str(ROOT / "scripts"))
+# копируем их. `key_rate_model` сам добавляет корень репозитория в `sys.path`.
+sys.path.insert(0, str(ROOT))
 
 from models.key_rate import key_rate_model as krm
-from lib import ml_experiment as mlx
+from bi_ml import experiment as mlx
 
 log = logging.getLogger(__name__)
 
@@ -155,7 +155,7 @@ CLASSIFIER_MAX_ITER = 1000
 CLASSIFIER_THRESHOLD = 0.5
 
 # Спека прогона — путь от корня репозитория для паспорта журнала (Task 5).
-SPEC_PATH = "docs/superpowers/specs/2026-10-19-key-rate-shock-classifier-design.md"
+SPEC_PATH = "docs/specs/2026-10-19-key-rate-shock-classifier-design.md"
 
 # Артефакты §8. Имена объявлены здесь, хотя пишутся в Task 5: ранние выходы
 # обязаны убирать устаревшие файлы, и список нужен целиком.
@@ -2302,7 +2302,7 @@ def render_report(
         f"[{WEIGHT_MIN}, {WEIGHT_MAX}].",
         "- **Скрипт не пишет в ClickHouse напрямую**: артефакты локальные; "
         "`ML_LOG=1` (или `--log`) включает журнал `ml_runs`/`ml_predictions` "
-        "через `ml_experiment`.",
+        "через `bi_ml.experiment`.",
         "- **Классификатор не используется для весов**: это слой валидации, "
         "а не источник весов; сравнение «с весами / без» показывает эффект "
         "именно причинных весов.",
@@ -2354,7 +2354,7 @@ def experiment_metrics(
     """Метрики паспорта `ML_LOG` (спека §8).
 
     Словарь плоский там, где это числа, и вложенный там, где сравнение по
-    методам: `flatten_metrics` `ml_experiment` развернёт вложенные ключи
+    методам: `flatten_metrics` `bi_ml.experiment` развернёт вложенные ключи
     (`weighted.taylor.rmse`) сам. `None` неопределённых метрик остаётся
     `None` — это честнее выдуманного нуля.
     """

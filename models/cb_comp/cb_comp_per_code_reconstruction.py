@@ -2,7 +2,7 @@
 """Task 8 #434: восстановление per-code МП (87 кодов) из листовых агрегатов.
 
 Пункт `key-rate/phase-4-cb-comp-88-groups-live`, зонтик #419. Протокол —
-спека `docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md` §16.
+спека `docs/specs/2026-10-30-cb-comp-88-groups-live-design.md` §16.
 
 Публичная книга ЦБ даёт 11 листов × 3 индикатора, нужны 87 кодов × 3. Лист —
 агрегат своих кодов (`W`), поэтому восстановление — обратная задача: на каждый
@@ -31,8 +31,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 
 SEED = 20261018
 INDICATORS = {
@@ -297,7 +297,7 @@ def run(panel_csv: Path, public_dir: Path, out_dir: Path) -> dict:
     codes_all = load_codes(panel_csv, public_dir / "sheet_map.csv")
     sheets_all, code_sheet = load_sheets(public_dir / "public_panel.csv", public_dir / "sheet_map.csv")
     result = {
-        "spec": "docs/superpowers/specs/2026-10-30-cb-comp-88-groups-live-design.md §16",
+        "spec": "docs/specs/2026-10-30-cb-comp-88-groups-live-design.md §16",
         "seed": SEED,
         "config": {"train": [TRAIN_START, TRAIN_END], "test": [TEST_START, TEST_END],
                    "lambdas": list(LAMBDAS), "factor_k": list(FACTOR_KS), "omp_k": list(OMP_KS),

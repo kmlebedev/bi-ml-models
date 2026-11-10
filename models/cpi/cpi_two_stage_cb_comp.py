@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """W5b: сравнение точности two-stage-линейки с CB_COMP на их тесте 2019-01…2024-07 (#401, #76 Task 5).
 
-Протокол — спека `docs/superpowers/specs/2026-10-29-cpi-two-stage-weekly-sa-design.md` §4 «Поправка
+Протокол — спека `docs/specs/2026-10-29-cpi-two-stage-weekly-sa-design.md` §4 «Поправка
 2026-10-30», «Протокол W5b», §6.3. Модели без Stage 1: `v3_direct@P_k`, `v5_direct` (v3 + недельный SA
 as-of), `weekly_naive` (h1); варианты `wf` (walk-forward) и `frozen` (как у CB_COMP). Истина —
 `TARGET_FULL[h][M]` (`M` — конец окна), строка `O = M−h+1`; цель обучения — `T_SAX` (w = 0,08, W3b).
@@ -18,8 +18,8 @@ from datetime import date
 from pathlib import Path
 from typing import Callable, Optional
 
-ROOT = Path(__file__).resolve().parents[3]
-sys.path.insert(0, str(ROOT / "scripts"))
+ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 import cpi_two_stage_folds as tf
