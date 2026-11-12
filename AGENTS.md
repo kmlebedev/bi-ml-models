@@ -1,6 +1,6 @@
 # AGENTS.md — правила работы в `bi-ml-models`
 
-Репозиторий разработки и тестирования моделей прогнозирования. Платформа данных — [`kmlebedev/clickhouse-import-rosstat`](https://github.com/kmlebedev/clickhouse-import-rosstat): там Go-импортёры, DDL, витрины, `forecast_log`, DAG, дашборды и issue-трекер.
+Репозиторий разработки и тестирования моделей прогнозирования. Платформа данных — [`kmlebedev/clickhouse-import-rosstat`](https://github.com/kmlebedev/clickhouse-import-rosstat): там Go-импортёры, DDL, витрины, `forecast_log`, DAG, дашборды, файлы роадмапов и Project V2. Issue ML-пунктов (`role:ml`) с 2026-11-12 открываются здесь, в `bi-ml-models`.
 
 ## Роль
 
@@ -12,7 +12,7 @@ ML-инженер работает здесь: модели, признаки, �
 2. `models/<семейство>/README.md` — model card выбранного семейства.
 3. `docs/methodology/stat-ml-models.md` — валидация, ловушки, данные.
 4. `docs/research/2026-10-18-ml-experiment-management.md` — паспорт run и цикл gates.
-5. Спека/план пункта — `docs/specs/`, `docs/plans/`; issue и роадмап — в main.
+5. Спека/план пункта — `docs/specs/`, `docs/plans/`; issue ML-пункта — здесь, на него ссылается PR; файл роадмапа и статус пункта — в main.
 
 ## Жёсткие правила
 
@@ -27,7 +27,7 @@ ML-инженер работает здесь: модели, признаки, �
 9. **Чтение ClickHouse** — `bi_ml/clickhouse.py`. **Запись** — только `ml_runs`/`ml_predictions` (`ML_LOG=1`) и live через ingest (`tools/forecast_log.py`). Прямой `INSERT` в другие таблицы запрещён.
 10. **Команды — через `make`/`uv`**, не `python` напрямую с ожиданием переменных окружения.
 11. **Тесты офлайн**: без ClickHouse и сети; данные — из `testdata/`.
-12. **Один пункт — одна ветка — один PR.** Трекер — issue в main; PR содержит ссылку на пункт.
+12. **Один пункт — одна ветка — один PR.** Трекер ML-пунктов — issue здесь, в `bi-ml-models` (Project V2 и канонический статус пункта — в main); PR содержит ссылку на issue пункта.
 
 ## Команды
 
