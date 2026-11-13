@@ -44,6 +44,26 @@ class LiveWeightsTest(unittest.TestCase):
         self.assertIn("NOT startsWith(code, 'name:')", sql)
         self.assertIn("FORMAT JSON", sql)
 
+    def test_archive_years_use_archive(self):
+        """2022 — вариант-исключение: модельный путь берёт его из архива."""
+        archive = Path("/tmp/a")
+        original = (bu._live_items, bu._dictionary_year, bu._dictionary_frame,
+                    bu._aggregate_year_weights, bu._year_weights)
+        bu._live_items = lambda rows: {2022: {"10": 0.5}, 2023: {"10": 0.4}}
+        bu._dictionary_year = lambda archive, year: year
+        bu._dictionary_frame = lambda archive, year: pd.DataFrame()
+        bu._aggregate_year_weights = lambda weights, dictionary, specs: {
+            code: 0.1 for code in weights["code"]
+        }
+        bu._year_weights = lambda archive, year, specs, book=None: {"10": 0.9}
+        try:
+            result = bu.load_live_weights(archive, [2022, 2023], [Spec("10")], query=lambda sql: [])
+        finally:
+            (bu._live_items, bu._dictionary_year, bu._dictionary_frame,
+             bu._aggregate_year_weights, bu._year_weights) = original
+        self.assertEqual(result[2022], {"10": 0.9})   # архив
+        self.assertEqual(result[2023], {"10": 0.1})   # live
+
     def test_missing_code_is_absent_not_zero(self):
         items = bu._live_items([{"year": 2024, "code": "10", "weight": 9.072}])
         self.assertNotIn("9260", items[2024])
@@ -91,14 +111,14 @@ class CompareTest(unittest.TestCase):
         archive = {2024: {"10": 0.09072, "9470": 0.05944}}
         comparison = wc.compare_weights(live, archive)
         self.assertEqual(comparison["years"]["2024"]["max_abs_diff"], 0.0)
-        ok, problems = wc.compare_gate(comparison, years=(2024,))
+        ok, problems, _exceptions = wc.compare_gate(comparison, years=(2024,))
         self.assertTrue(ok, problems)
 
     def test_missing_live_code_fails_gate(self):
         live = {2024: {"10": 0.09072}}
         archive = {2024: {"10": 0.09072, "9260": 0.00565}}
         comparison = wc.compare_weights(live, archive)
-        ok, problems = wc.compare_gate(comparison, years=(2024,))
+        ok, problems, _exceptions = wc.compare_gate(comparison, years=(2024,))
         self.assertFalse(ok)
         self.assertTrue(any("9260" in problem for problem in problems))
 
@@ -107,12 +127,28 @@ class CompareTest(unittest.TestCase):
         archive = {2024: {"10": 0.09072}}
         comparison = wc.compare_weights(live, archive)
         self.assertEqual(comparison["years"]["2024"]["extra_live"], ["803"])
-        ok, problems = wc.compare_gate(comparison, years=(2024,))
+        ok, problems, _exceptions = wc.compare_gate(comparison, years=(2024,))
         self.assertTrue(ok, problems)
+
+    def test_variant_2022_exception_does_not_fail_gate(self):
+        live = {2022: {"9540": 0.01448}}
+        archive = {2022: {"9540": 0.01018}}
+        comparison = wc.compare_weights(live, archive)
+        ok, problems, exceptions = wc.compare_gate(comparison, years=(2022,))
+        self.assertTrue(ok, problems)
+        self.assertTrue(any("2022" in item and "9540" in item for item in exceptions))
+
+    def test_diff_outside_2022_fails_gate(self):
+        live = {2024: {"9540": 0.01448}}
+        archive = {2024: {"9540": 0.01018}}
+        comparison = wc.compare_weights(live, archive)
+        ok, problems, _exceptions = wc.compare_gate(comparison, years=(2024,))
+        self.assertFalse(ok)
+        self.assertTrue(any("2024" in problem for problem in problems))
 
     def test_missing_year_fails(self):
         comparison = wc.compare_weights({2024: {"10": 0.1}}, {2024: {"10": 0.1}})
-        ok, problems = wc.compare_gate(comparison, years=(2023, 2024))
+        ok, problems, _exceptions = wc.compare_gate(comparison, years=(2023, 2024))
         self.assertFalse(ok)
         self.assertTrue(any("2023" in problem for problem in problems))
 
@@ -167,7 +203,10 @@ class SumsTest(unittest.TestCase):
     def test_combined_group_sums_reads_group_file(self):
         def query(sql):
             self.assertIn("CPR_Gr-Tov-RF", sql)
-            self.assertIn("positionCaseInsensitive", sql)
+            # positionCaseInsensitive возвращает 0 и при совпадении в начале, и при
+            # отсутствии совпадения, поэтому фильтр — ILIKE.
+            self.assertIn("ILIKE '%воздушн%'", sql)
+            self.assertIn("ILIKE '%железнодорож%'", sql)
             return [{"year": 2025, "variant": "", "total": 0.843}]
 
         combined = wc.combined_group_sums(query=query)

@@ -360,6 +360,12 @@ LIVE_WEIGHTS_ITEMS = "CPR_tov_RF"
 LIVE_ARCHIVE_FALLBACK = ("9260", "9290")
 # Live-набор годов: архив кончается 2024, а для месяцев 2026 нужен вес 2025.
 LIVE_WEIGHT_YEARS = tuple(range(2016, 2027))
+# 2022 — вариант-исключение: публикация 2022 разбита на два листа («до 01.04» и
+# «с 01.04»), и live-2022 расходится с архивом одной группой (`9540`, 0,0043) —
+# это разница публикаций, а не ошибка загрузчика. Модельный путь берёт 2022 из
+# архива (пины Task 3/9 не переписываются), а `cb-comp-weights-check` сравнивает
+# сырую live-агрегацию и печатает расхождение отдельной строкой.
+LIVE_ARCHIVE_YEARS = (2022,)
 
 
 def live_weights_query(years) -> str:
@@ -386,7 +392,7 @@ def _live_items(rows) -> dict:
     return result
 
 
-def load_live_weights(archive: Path, years, specs: list, query=None) -> dict:
+def load_live_weights(archive: Path, years, specs: list, query=None, archive_years=LIVE_ARCHIVE_YEARS) -> dict:
     """`{год: {код: доля}}` из витрины `v_rosstat_cpi_weights`.
 
     Веса групп считаются из товарных листьев (коды) и словаря того же года —
@@ -404,6 +410,12 @@ def load_live_weights(archive: Path, years, specs: list, query=None) -> dict:
     result = {}
     dictionary_cache = {}
     for year in years:
+        if year in archive_years:
+            # Вариант-исключение: 2022 берётся из архива, см. LIVE_ARCHIVE_YEARS.
+            archive_table = _year_weights(archive, year, specs)
+            if archive_table:
+                result[year] = archive_table
+                continue
         if not items.get(year):
             continue
         dictionary_year = _dictionary_year(archive, year)

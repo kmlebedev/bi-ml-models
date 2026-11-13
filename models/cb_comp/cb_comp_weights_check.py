@@ -59,9 +59,21 @@ def compare_weights(live: dict, archive: dict) -> dict:
     return {"years": result, "missing_years": missing_years}
 
 
+# 2022 — вариант-исключение, зафиксированное спекой §4: в товарном файле 2025-винтажа
+# один лист 2022, в групповом — два, и расхождение одной группы (на Wayback-копии —
+# `9540`, 0,0043) это разница публикаций, а не ошибка загрузчика. Такое расхождение
+# пишется в отчёт (`variant_exception`) и гейт не валит; решение о варианте — за
+# владельцем, подгонка запрещена.
+VARIANT_EXCEPTION_YEARS = (2022,)
+
+
 def compare_gate(comparison: dict, years=ARCHIVE_YEARS) -> tuple:
-    """Гейт сверки: каждый год есть, `max |Δ| ≤ 1e-12`, нет отсутствующих кодов."""
-    problems = []
+    """Гейт сверки: каждый год есть, `max |Δ| ≤ 1e-12`, нет отсутствующих кодов.
+
+    Возвращает `(ok, problems, exceptions)`: `exceptions` — расхождения годов из
+    `VARIANT_EXCEPTION_YEARS`, которые публикуются в отчёте, но не валят гейт.
+    """
+    problems, exceptions = [], []
     for year in years:
         block = comparison["years"].get(str(year))
         if block is None:
@@ -70,8 +82,12 @@ def compare_gate(comparison: dict, years=ARCHIVE_YEARS) -> tuple:
         if block["missing_live"]:
             problems.append(f"{year}: в live нет кодов {block['missing_live'][:8]}")
         if block["max_abs_diff"] is None or block["max_abs_diff"] > TOLERANCE:
-            problems.append(f"{year}: max |Δ| = {block['max_abs_diff']} (worst {block['worst_code']})")
-    return (not problems, problems)
+            detail = f"{year}: max |Δ| = {block['max_abs_diff']} (worst {block['worst_code']})"
+            if year in VARIANT_EXCEPTION_YEARS and not block["missing_live"]:
+                exceptions.append(detail)
+                continue
+            problems.append(detail)
+    return (not problems, problems, exceptions)
 
 
 def live_sums(query=None) -> list:
@@ -107,8 +123,10 @@ def combined_group_sums(query=None) -> dict:
     rows = query(
         "SELECT year, variant, sum(weight) AS total FROM v_rosstat_cpi_weights "
         "WHERE source_file = 'CPR_Gr-Tov-RF' AND year >= 2016 "
-        "AND positionCaseInsensitive(name, 'воздушный') > 0 "
-        "AND positionCaseInsensitive(name, 'железнодорожный') > 0 "
+        # ILIKE, а не positionCaseInsensitive: та возвращает 0 и для «найдено в
+        # начале», и для «не найдено» (UInt64), поэтому условие `> 0` теряло ровно
+        # искомую строку — имя начинается с «Воздушный».
+        "AND name ILIKE '%воздушн%' AND name ILIKE '%железнодорож%' "
         "GROUP BY year, variant ORDER BY year, variant FORMAT JSON"
     )
     return {(int(row["year"]), str(row["variant"])): float(row["total"]) for row in rows}
@@ -159,14 +177,16 @@ def build_report(archive: Path, panel_csv: Path, years=LIVE_YEARS) -> dict:
     specs = bu.load_specs(archive)
     codes = [spec.code for spec in specs]
     archive_weights = bu.load_weights(archive, ARCHIVE_YEARS, specs, source="archive")
-    live_weights = bu.load_weights(archive, years, specs, source="live")
+    # Сырая live-агрегация (без варианта-исключения 2022) — предмет сверки;
+    # модельный путь (`load_weights`) берёт 2022 из архива, см. LIVE_ARCHIVE_YEARS.
+    live_weights = bu.load_live_weights(archive, years, specs, archive_years=())
     if not live_weights:
         raise SystemExit(
             "v_rosstat_cpi_weights пуста: сначала `make import STAT=rosstat_cpi_weights` "
             "(P0.4; источник rosstat.gov.ru на 2026-11-01 недоступен)"
         )
     comparison = compare_weights(live_weights, archive_weights)
-    gate_ok, problems = compare_gate(comparison)
+    gate_ok, problems, exceptions = compare_gate(comparison)
 
     sums = pair_sums(live_sums(), combined_group_sums())
     sums_ok = all(abs(item["pair_total"] - 100.0) <= 0.5 for item in sums)
@@ -180,9 +200,12 @@ def build_report(archive: Path, panel_csv: Path, years=LIVE_YEARS) -> dict:
     return {
         "spec": "docs/specs/2026-11-13-cb-comp-live-weights-design.md",
         "issue": 479,
+        "ml_issue": 25,
+        "live_archive_years": list(bu.LIVE_ARCHIVE_YEARS),
         "years": {"archive": list(ARCHIVE_YEARS), "live": list(years)},
         "comparison": comparison,
         "gate": {"ok": gate_ok and sums_ok and coverage_ok, "problems": problems,
+                 "variant_exception": exceptions,
                  "weights_match": gate_ok, "sums_ok": sums_ok, "coverage_ok": coverage_ok},
         "sums": sums,
         "coverage": coverage,
