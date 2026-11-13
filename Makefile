@@ -651,6 +651,14 @@ cb-comp-h1-bs-combo-test:
 	uv run --with "catboost>=1.2" --with scikit-learn --with pandas --with openpyxl --with "statsmodels>=0.15" --with scipy --python 3.12 python3 models/cb_comp/cb_comp_h1_bs_combo_test.py -v
 	uv run --with "catboost>=1.2" --with scikit-learn --with pandas --python 3.12 python3 models/cb_comp/cb_comp_mlog_test.py -v
 
+# P0.4 #25: сверка live-весов ИПЦ (v_rosstat_cpi_weights) с архивом CB_COMP
+# 2016–2024, суммы 2025–26 и покрытие; в БД не пишет.
+cb-comp-weights-check:
+	uv run --with "catboost>=1.2" --with scikit-learn --with pandas --with openpyxl --with "statsmodels>=0.15" --with scipy --python 3.12 python3 models/cb_comp/cb_comp_weights_check.py $(ARGS)
+
+cb-comp-weights-check-test:
+	uv run --with "catboost>=1.2" --with scikit-learn --with pandas --with openpyxl --with "statsmodels>=0.15" --with scipy --python 3.12 python3 models/cb_comp/cb_comp_weights_check_test.py -v
+
 # Task 17 #501: CatBoost vs LightGBM/XGBoost на том же конвейере Task 9 —
 # плечи defaults/matched, точность (RMSE/ratio/DM/CI/MCS) и время fit;
 # ML_LOG=1 — паспорта в эксперименте cb_comp_88_groups (MLflow + ml_runs).
