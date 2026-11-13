@@ -20,13 +20,13 @@
 
 - [x] `make compile`; `make cb-comp-weights-check-test` — 15 OK.
 - [x] Регрессия существующих тестов: `cb_comp_bottomup_test` 28 OK, `cb_comp_h1_bs_combo_test` 21 OK, `cb_comp_live_bottomup_test` 22 OK, `cb_comp_live_en_test` 13 OK.
-- [ ] `make cb-comp-weights-check ARGS="--archive <CB_COMP_ARCHIVE>"` — живой прогон: 2016–2024 `max|Δ|`, суммы 2025–26, покрытие.
-- [ ] `make cb-comp-h1-bs-combo --weights archive` — пины 1,0348 / 0,9571 / 1,0102 / 0,8940.
-- [ ] `make cb-comp-h1-bs-combo --weights live` — те же числа на 2019–2024 (допуск 1e-12); при таймауте — «не измерено» с причиной.
+- [x] `make cb-comp-weights-check ARGS="--archive <CB_COMP_ARCHIVE>"` — 2016–2024 `max|Δ|` (2022 — `variant_exception`), суммы 100,0, покрытие 0,8955–0,9187.
+- [x] `make cb-comp-h1-bs-combo --weights archive` — пины 1,0348 / 0,9571 / 1,0102 / 0,8940, G9 p=0,00846.
+- [x] `make cb-comp-h1-bs-combo --weights live` — те же числа, `predictions.csv` 2144 строки, 0 расхождений > 1e-12.
 
 ## 3. Документы и приёмка
 
-- [ ] Отчёт `docs/research/2026-11-13-cb-comp-live-weights.md` + JSON: `max|Δ|` по годам, 2022-исключение, суммы, покрытие, числа Task 9, «что не проверено».
+- [x] Отчёт `docs/research/2026-11-13-cb-comp-live-weights.md` + JSON: `max|Δ|` по годам, 2022-исключение, суммы, покрытие, числа Task 9, «что не проверено».
 - [ ] PR: `Closes` — нет (issue закрывается после мержа и протокола), ссылка на #25 и #479; протокол — комментарием.
 - [ ] Project V2: `In Review` при открытии PR, `PR` заполнить.
 
